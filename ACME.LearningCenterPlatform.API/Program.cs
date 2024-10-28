@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
 // Dependency Injection
 
 // Shared Bounded Context
-builder.Services.AddScoped<IUnitOfWOrk, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Publishing Bounded Context
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

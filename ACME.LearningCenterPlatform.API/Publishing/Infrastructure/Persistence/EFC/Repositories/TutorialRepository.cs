@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Aggregate;
 using ACME.LearningCenterPlatform.API.Publishing.Domain.Repositories;
 using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -14,7 +15,7 @@ namespace ACME.LearningCenterPlatform.API.Publishing.Infrastructure.Persistence.
 /// </param>
 public class TutorialRepository(AppDbContext context) : BaseRepository<Tutorial>(context), ITutorialRepository
 {
-    // inheritedDoc
+    // <inheritdoc />
     public async Task<IEnumerable<Tutorial>> FindByCategoryIdAsync(int categoryId)
     {
         return await Context.Set<Tutorial>()
@@ -23,7 +24,12 @@ public class TutorialRepository(AppDbContext context) : BaseRepository<Tutorial>
             .ToListAsync();
     }
 
-    // inheritedDoc
+    public async Task<bool> ExistsByTitleAsync(string title)
+    {
+        return await Context.Set<Tutorial>().AnyAsync(tutorial => tutorial.Title == title); 
+    }
+
+    // <inheritdoc />
     public new async Task<Tutorial?> FindByIdAsync(int id)
     {
         return await Context.Set<Tutorial>()
@@ -31,7 +37,7 @@ public class TutorialRepository(AppDbContext context) : BaseRepository<Tutorial>
             .FirstOrDefaultAsync(tutorial => tutorial.Id == id);
     }
 
-    // inheritedDoc
+    // <inheritdoc />
     public new async Task<IEnumerable<Tutorial>> ListAsync()
     {
         return await Context.Set<Tutorial>()

@@ -18,4 +18,6 @@ public interface ITutorialRepository : IBaseRepository<Tutorial>
     /// A collection of tutorials that belong to the category.
     /// </returns>
     Task<IEnumerable<Tutorial>> FindByCategoryIdAsync(int categoryId);
+
+    Task<bool> ExistsByTitleAsync(string title);
 }
