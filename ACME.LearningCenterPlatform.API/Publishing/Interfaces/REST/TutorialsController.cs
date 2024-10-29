@@ -9,28 +9,31 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace ACME.LearningCenterPlatform.API.Publishing.Interfaces.REST;
 
 /// <summary>
-/// The tutorial controller 
+///     The tutorial controller
 /// </summary>
 /// <param name="tutorialQueryService">
-/// The <see cref="ITutorialQueryService"/> instance to query tutorials
+///     The <see cref="ITutorialQueryService" /> instance to query tutorials
 /// </param>
 /// <param name="tutorialCommandService">
-/// The <see cref="ITutorialCommandService"/> instance to execute commands on tutorials
+///     The <see cref="ITutorialCommandService" /> instance to execute commands on tutorials
 /// </param>
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [SwaggerTag("Available Tutorial endpoints")]
-public class TutorialsController(ITutorialQueryService tutorialQueryService, ITutorialCommandService tutorialCommandService) : ControllerBase 
+public class TutorialsController(
+    ITutorialQueryService tutorialQueryService,
+    ITutorialCommandService tutorialCommandService) : ControllerBase
 {
     /// <summary>
-    /// Get a tutorial by its id 
+    ///     Get a tutorial by its id
     /// </summary>
     /// <param name="tutorialId">
-    /// The tutorial id
+    ///     The tutorial id
     /// </param>
     /// <returns>
-    /// The <see cref="TutorialResource"/> with the tutorial if found, otherwise it returns a response with <see cref="NotFoundResult"/>
+    ///     The <see cref="TutorialResource" /> with the tutorial if found, otherwise it returns a response with
+    ///     <see cref="NotFoundResult" />
     /// </returns>
     [HttpGet("{tutorialId:int}")]
     [SwaggerOperation(
@@ -48,13 +51,14 @@ public class TutorialsController(ITutorialQueryService tutorialQueryService, ITu
     }
 
     /// <summary>
-    /// Create a tutorial 
+    ///     Create a tutorial
     /// </summary>
     /// <param name="resource">
-    ///  The <see cref="CreateTutorialResource"/> with the tutorial data to create
+    ///     The <see cref="CreateTutorialResource" /> with the tutorial data to create
     /// </param>
     /// <returns>
-    /// The <see cref="TutorialResource"/> with the tutorial created if successful, otherwise it returns a response with <see cref="BadRequestResult"/>
+    ///     The <see cref="TutorialResource" /> with the tutorial created if successful, otherwise it returns a response with
+    ///     <see cref="BadRequestResult" />
     /// </returns>
     [HttpPost]
     [SwaggerOperation(
@@ -97,7 +101,8 @@ public class TutorialsController(ITutorialQueryService tutorialQueryService, ITu
         [FromBody] AddVideoAssetToTutorialResource resource,
         [FromRoute] int tutorialId)
     {
-        var addVideoAssetToTutorialCommand = AddVideoAssetToTutorialCommandFromResourceAssembler.ToCommandFromResource(resource, tutorialId);
+        var addVideoAssetToTutorialCommand =
+            AddVideoAssetToTutorialCommandFromResourceAssembler.ToCommandFromResource(resource, tutorialId);
         var tutorial = await tutorialCommandService.Handle(addVideoAssetToTutorialCommand);
         if (tutorial is null) return BadRequest();
         var tutorialResource = TutorialResourceFromEntityAssembler.ToResourceFromEntity(tutorial);

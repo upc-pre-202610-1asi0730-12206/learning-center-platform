@@ -6,9 +6,9 @@ using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Repo
 namespace ACME.LearningCenterPlatform.API.Publishing.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
-/// Represents the category repository in the ACME Learning Center Platform. 
+///     Represents the category repository in the ACME Learning Center Platform.
 /// </summary>
 /// <param name="context">
-/// The <see cref="AppDbContext"/> to use.
+///     The <see cref="AppDbContext" /> to use.
 /// </param>
 public class CategoryRepository(AppDbContext context) : BaseRepository<Category>(context), ICategoryRepository;

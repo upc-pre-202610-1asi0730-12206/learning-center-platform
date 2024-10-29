@@ -3,15 +3,15 @@ using ACME.LearningCenterPlatform.API.Publishing.Domain.Model.ValueObjects;
 namespace ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Entities;
 
 /// <summary>
-/// Represents an asset in the ACME Learning Center Platform. 
+///     Represents an asset in the ACME Learning Center Platform.
 /// </summary>
 /// <param name="type">
-/// The type of the asset.
+///     The type of the asset.
 /// </param>
 public partial class Asset(EAssetType type) : IPublishable
 {
     public int Id { get; }
-    
+
     public AcmeAssetIdentifier AssetIdentifier { get; private set; } = new();
     public EPublishingStatus Status { get; private set; } = EPublishingStatus.Draft;
     public EAssetType Type { get; private set; } = type;
@@ -19,7 +19,7 @@ public partial class Asset(EAssetType type) : IPublishable
     public virtual bool Viewable => false;
 
     /// <summary>
-    /// Send the asset to the editing phase. It sets the <see cref="EPublishingStatus.ReadyToEdit"/> status. 
+    ///     Send the asset to the editing phase. It sets the <see cref="EPublishingStatus.ReadyToEdit" /> status.
     /// </summary>
     public void SendToEdit()
     {
@@ -27,7 +27,7 @@ public partial class Asset(EAssetType type) : IPublishable
     }
 
     /// <summary>
-    /// Send the asset to the approval phase. It sets the <see cref="EPublishingStatus.ReadyToApproval"/> status. 
+    ///     Send the asset to the approval phase. It sets the <see cref="EPublishingStatus.ReadyToApproval" /> status.
     /// </summary>
     public void SendToApproval()
     {
@@ -35,7 +35,7 @@ public partial class Asset(EAssetType type) : IPublishable
     }
 
     /// <summary>
-    /// Approve the asset and lock it. It sets the <see cref="EPublishingStatus.ApprovedAndLocked"/> status. 
+    ///     Approve the asset and lock it. It sets the <see cref="EPublishingStatus.ApprovedAndLocked" /> status.
     /// </summary>
     public void ApproveAndLock()
     {
@@ -43,7 +43,7 @@ public partial class Asset(EAssetType type) : IPublishable
     }
 
     /// <summary>
-    /// Reject the asset. It sets the <see cref="EPublishingStatus.Draft"/> status. 
+    ///     Reject the asset. It sets the <see cref="EPublishingStatus.Draft" /> status.
     /// </summary>
     public void Reject()
     {
@@ -51,7 +51,7 @@ public partial class Asset(EAssetType type) : IPublishable
     }
 
     /// <summary>
-    /// Return the asset to the editing phase. It sets the <see cref="EPublishingStatus.ReadyToEdit"/> status. 
+    ///     Return the asset to the editing phase. It sets the <see cref="EPublishingStatus.ReadyToEdit" /> status.
     /// </summary>
     public void ReturnToEdit()
     {
@@ -59,10 +59,10 @@ public partial class Asset(EAssetType type) : IPublishable
     }
 
     /// <summary>
-    /// Get the content of the asset. 
+    ///     Get the content of the asset.
     /// </summary>
     /// <returns>
-    /// The content of the asset.
+    ///     The content of the asset.
     /// </returns>
     public virtual object GetContent()
     {

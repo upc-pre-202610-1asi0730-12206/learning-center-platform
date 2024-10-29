@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
 using ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Aggregate;
 using ACME.LearningCenterPlatform.API.Publishing.Domain.Repositories;
 using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -8,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 namespace ACME.LearningCenterPlatform.API.Publishing.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
-/// Represents the tutorial repository in the ACME Learning Center Platform. 
+///     Represents the tutorial repository in the ACME Learning Center Platform.
 /// </summary>
 /// <param name="context">
-/// The <see cref="AppDbContext"/> to use.
+///     The <see cref="AppDbContext" /> to use.
 /// </param>
 public class TutorialRepository(AppDbContext context) : BaseRepository<Tutorial>(context), ITutorialRepository
 {
@@ -26,7 +25,7 @@ public class TutorialRepository(AppDbContext context) : BaseRepository<Tutorial>
 
     public async Task<bool> ExistsByTitleAsync(string title)
     {
-        return await Context.Set<Tutorial>().AnyAsync(tutorial => tutorial.Title == title); 
+        return await Context.Set<Tutorial>().AnyAsync(tutorial => tutorial.Title == title);
     }
 
     // <inheritdoc />

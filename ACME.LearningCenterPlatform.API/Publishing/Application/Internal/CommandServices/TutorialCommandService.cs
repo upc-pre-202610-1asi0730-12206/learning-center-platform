@@ -27,7 +27,8 @@ public class TutorialCommandService(
     {
         var category = await categoryRepository.FindByIdAsync(command.CategoryId);
         if (category is null) throw new Exception("Category not found");
-        if (await tutorialRepository.ExistsByTitleAsync(command.Title)) throw new Exception("Tutorial with the same title already exists");
+        if (await tutorialRepository.ExistsByTitleAsync(command.Title))
+            throw new Exception("Tutorial with the same title already exists");
         var tutorial = new Tutorial(command);
         await tutorialRepository.AddAsync(tutorial);
         await unitOfWork.CompleteAsync();

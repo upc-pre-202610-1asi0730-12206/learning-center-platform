@@ -1,7 +1,7 @@
 namespace ACME.LearningCenterPlatform.API.Publishing.Domain.Model.ValueObjects;
 
 /// <summary>
-/// Represents a publishable content item in the ACME Learning Center Platform. 
+///     Represents a publishable content item in the ACME Learning Center Platform.
 /// </summary>
 public interface IPublishable
 {

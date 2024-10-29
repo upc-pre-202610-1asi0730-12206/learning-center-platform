@@ -3,18 +3,18 @@ using Humanizer;
 namespace ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 /// <summary>
-/// String extensions for the database context 
+///     String extensions for the database context
 /// </summary>
 public static class StringExtensions
 {
     /// <summary>
-    /// Convert the string to snake case 
+    ///     Convert the string to snake case
     /// </summary>
     /// <param name="text">
-    /// The text to convert to snake case
+    ///     The text to convert to snake case
     /// </param>
     /// <returns>
-    /// The snake cased text
+    ///     The snake cased text
     /// </returns>
     public static string ToSnakeCase(this string text)
     {
@@ -40,13 +40,13 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Convert the string to plural 
+    ///     Convert the string to plural
     /// </summary>
     /// <param name="text">
-    /// The text to convert to plural
+    ///     The text to convert to plural
     /// </param>
     /// <returns>
-    /// The pluralized text
+    ///     The pluralized text
     /// </returns>
     public static string ToPlural(this string text)
     {

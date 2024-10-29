@@ -6,10 +6,10 @@ using ACME.LearningCenterPlatform.API.Publishing.Domain.Services;
 namespace ACME.LearningCenterPlatform.API.Publishing.Application.Internal.QueryServices;
 
 /// <summary>
-/// Tutorial query service 
+///     Tutorial query service
 /// </summary>
 /// <param name="tutorialRepository">
-/// Tutorial repository
+///     Tutorial repository
 /// </param>
 public class TutorialQueryService(ITutorialRepository tutorialRepository) : ITutorialQueryService
 

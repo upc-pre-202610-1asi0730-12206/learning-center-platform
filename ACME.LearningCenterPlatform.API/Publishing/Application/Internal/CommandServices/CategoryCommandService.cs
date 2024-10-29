@@ -7,16 +7,16 @@ using ACME.LearningCenterPlatform.API.Shared.Domain.Repositories;
 namespace ACME.LearningCenterPlatform.API.Publishing.Application.Internal.CommandServices;
 
 /// <summary>
-/// Represents the category command service in the ACME Learning Center Platform. 
+///     Represents the category command service in the ACME Learning Center Platform.
 /// </summary>
 /// <param name="categoryRepository">
-/// The <see cref="ICategoryRepository"/> to use.
+///     The <see cref="ICategoryRepository" /> to use.
 /// </param>
 /// <param name="unitOfWork">
-/// The <see cref="IUnitOfWork"/> to use.
+///     The <see cref="IUnitOfWork" /> to use.
 /// </param>
 public class CategoryCommandService(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
-: ICategoryCommandService
+    : ICategoryCommandService
 {
     /// <inheritdoc />
     public async Task<Category?> Handle(CreateCategoryCommand command)

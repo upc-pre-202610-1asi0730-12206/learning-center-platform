@@ -15,13 +15,13 @@ namespace ACME.LearningCenterPlatform.API.Publishing.Interfaces.REST;
 public class CategoryTutorialsController(ITutorialQueryService tutorialQueryService) : ControllerBase
 {
     /// <summary>
-    /// Get all tutorials by category id 
+    ///     Get all tutorials by category id
     /// </summary>
     /// <param name="categoryId">
-    /// The category id
+    ///     The category id
     /// </param>
     /// <returns>
-    /// The list of <see cref="TutorialResource"/> tutorials
+    ///     The list of <see cref="TutorialResource" /> tutorials
     /// </returns>
     [HttpGet]
     [SwaggerOperation(
@@ -35,5 +35,5 @@ public class CategoryTutorialsController(ITutorialQueryService tutorialQueryServ
         var tutorials = await tutorialQueryService.Handle(getTutorialsByCategoryIdQuery);
         var tutorialResources = tutorials.Select(TutorialResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(tutorialResources);
-    }    
+    }
 }

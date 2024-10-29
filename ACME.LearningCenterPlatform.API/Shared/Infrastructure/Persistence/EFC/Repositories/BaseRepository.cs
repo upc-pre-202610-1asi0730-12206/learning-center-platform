@@ -5,27 +5,27 @@ using Microsoft.EntityFrameworkCore;
 namespace ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
-/// Base repository for all repositories 
+///     Base repository for all repositories
 /// </summary>
 /// <remarks>
-/// This class is used to define the basic CRUD operations for all repositories.
-/// This class implements the IBaseRepository interface.
+///     This class is used to define the basic CRUD operations for all repositories.
+///     This class implements the IBaseRepository interface.
 /// </remarks>
 /// <typeparam name="TEntity">
-/// The entity type for the repository
+///     The entity type for the repository
 /// </typeparam>
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
     protected readonly AppDbContext Context;
-    
+
     /// <summary>
-    /// Default constructor for the base repository
-    /// </summary> 
+    ///     Default constructor for the base repository
+    /// </summary>
     protected BaseRepository(AppDbContext context)
     {
         Context = context;
     }
-    
+
     // inheritedDoc
     public async Task AddAsync(TEntity entity)
     {

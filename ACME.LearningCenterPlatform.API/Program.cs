@@ -18,26 +18,18 @@ builder.Services.AddControllers(options => options.Conventions.Add(new KebabCase
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-if (connectionString == null)
-{
-    throw new InvalidOperationException("Connection string not found.");
-}
+if (connectionString == null) throw new InvalidOperationException("Connection string not found.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (builder.Environment.IsDevelopment())
-    {
-
         options.UseMySQL(connectionString)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
-    }
     else if (builder.Environment.IsProduction())
-    {
         options.UseMySQL(connectionString)
             .LogTo(Console.WriteLine, LogLevel.Error);
-    }
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 namespace ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 /// <summary>
-/// Model builder extensions for the database context 
+///     Model builder extensions for the database context
 /// </summary>
 public static class ModelBuilderExtensions
 {
     /// <summary>
-    /// Use snake case naming convention for the database context 
+    ///     Use snake case naming convention for the database context
     /// </summary>
     /// <param name="builder">
-    /// The model builder for the database context
+    ///     The model builder for the database context
     /// </param>
     public static void UseSnakeCaseNamingConvention(this ModelBuilder builder)
     {
@@ -19,7 +19,7 @@ public static class ModelBuilderExtensions
         {
             var tableName = entity.GetTableName();
             if (!string.IsNullOrEmpty(tableName)) entity.SetTableName(tableName.ToPlural().ToSnakeCase());
-            
+
             foreach (var property in entity.GetProperties())
                 property.SetColumnName(property.GetColumnName().ToSnakeCase());
 
