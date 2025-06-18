@@ -10,7 +10,7 @@ public class CategoryCreatedEventHandler : IEventHandler<CategoryCreatedEvent>
         return On(domainEvent);
     }
     
-    private Task On(CategoryCreatedEvent domainEvent) {
+    private static Task On(CategoryCreatedEvent domainEvent) {
         Console.WriteLine("Created Category: {0}",domainEvent.Name);
         return Task.CompletedTask;    
     }
