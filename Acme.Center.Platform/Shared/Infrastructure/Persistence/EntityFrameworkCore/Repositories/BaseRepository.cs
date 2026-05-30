@@ -1,6 +1,9 @@
 using Acme.Center.Platform.Shared.Domain.Repositories;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
@@ -27,15 +30,15 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     }
 
     // inheritedDoc
-    public async Task AddAsync(TEntity entity)
+    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await Context.Set<TEntity>().AddAsync(entity);
+        await Context.Set<TEntity>().AddAsync(entity, cancellationToken);
     }
 
     // inheritedDoc
-    public async Task<TEntity?> FindByIdAsync(int id)
+    public async Task<TEntity?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await Context.Set<TEntity>().FindAsync(id);
+        return await Context.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
     }
 
     // inheritedDoc
@@ -51,8 +54,8 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     }
 
     // inheritedDoc
-    public async Task<IEnumerable<TEntity>> ListAsync()
+    public async Task<IEnumerable<TEntity>> ListAsync(CancellationToken cancellationToken = default)
     {
-        return await Context.Set<TEntity>().ToListAsync();
+        return await Context.Set<TEntity>().ToListAsync(cancellationToken);
     }
 }

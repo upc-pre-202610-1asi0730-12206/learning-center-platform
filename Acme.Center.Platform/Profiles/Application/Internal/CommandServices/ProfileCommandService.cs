@@ -4,6 +4,8 @@ using Acme.Center.Platform.Profiles.Domain.Model.Commands;
 using Acme.Center.Platform.Profiles.Domain.Repositories;
 using Acme.Center.Platform.Shared.Application.Model;
 using Acme.Center.Platform.Shared.Domain.Repositories;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Profiles.Application.Internal.CommandServices;
 
@@ -22,13 +24,13 @@ public class ProfileCommandService(
     : IProfileCommandService
 {
     /// <inheritdoc />
-    public async Task<Result<Profile>> Handle(CreateProfileCommand command)
+    public async Task<Result<Profile>> Handle(CreateProfileCommand command, CancellationToken cancellationToken)
     {
         var profile = new Profile(command);
         try
         {
-            await profileRepository.AddAsync(profile);
-            await unitOfWork.CompleteAsync();
+            await profileRepository.AddAsync(profile, cancellationToken);
+            await unitOfWork.CompleteAsync(cancellationToken);
             return Result<Profile>.Success(profile);
         }
         catch (Exception e)

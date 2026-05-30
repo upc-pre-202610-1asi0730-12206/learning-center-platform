@@ -2,6 +2,8 @@ using Acme.Center.Platform.Iam.Application.Internal.OutboundServices;
 using Acme.Center.Platform.Iam.Domain.Model.Queries;
 using Acme.Center.Platform.Iam.Domain.Services;
 using Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Attributes;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Components;
 
@@ -22,7 +24,8 @@ public class RequestAuthorizationMiddleware(RequestDelegate next)
     public async Task InvokeAsync(
         HttpContext context,
         IUserQueryService userQueryService,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        CancellationToken cancellationToken)
     {
         Console.WriteLine("Entering InvokeAsync");
         // skip authorization if endpoint is decorated with [AllowAnonymous] attribute
@@ -56,7 +59,7 @@ public class RequestAuthorizationMiddleware(RequestDelegate next)
 
         // set user in HttpContext.Items["User"]
 
-        var user = await userQueryService.Handle(getUserByIdQuery);
+        var user = await userQueryService.Handle(getUserByIdQuery, cancellationToken);
         Console.WriteLine("Successful authorization. Updating Context...");
         context.Items["User"] = user;
         Console.WriteLine("Continuing with Middleware Pipeline");

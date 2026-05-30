@@ -5,6 +5,8 @@ using Acme.Center.Platform.Iam.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Transform;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 
@@ -20,6 +22,7 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
      *     Sign in endpoint. It allows authenticating a user
      * </summary>
      * <param name="signInResource">The sign-in resource containing username and password.</param>
+     * <param name="cancellationToken">The cancellation token.</param>
      * <returns>The authenticated user resource, including a JWT token</returns>
      */
     [HttpPost("sign-in")]
@@ -30,10 +33,10 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
         OperationId = "SignIn")]
     [SwaggerResponse(StatusCodes.Status200OK, "The user was authenticated", typeof(AuthenticatedUserResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid username or password")]
-    public async Task<IActionResult> SignIn([FromBody] SignInResource signInResource)
+    public async Task<IActionResult> SignIn([FromBody] SignInResource signInResource, CancellationToken cancellationToken)
     {
         var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(signInResource);
-        var result = await userCommandService.Handle(signInCommand);
+        var result = await userCommandService.Handle(signInCommand, cancellationToken);
         if (result.IsFailure) return BadRequest(result.Message);
         var authenticatedUser = result.Value;
         var resource =
@@ -47,6 +50,7 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
      *     Sign up endpoint. It allows creating a new user
      * </summary>
      * <param name="signUpResource">The sign-up resource containing username and password.</param>
+     * <param name="cancellationToken">The cancellation token.</param>
      * <returns>A confirmation message on successful creation.</returns>
      */
     [HttpPost("sign-up")]
@@ -57,10 +61,10 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
         OperationId = "SignUp")]
     [SwaggerResponse(StatusCodes.Status200OK, "The user was created successfully")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The user was not created")]
-    public async Task<IActionResult> SignUp([FromBody] SignUpResource signUpResource)
+    public async Task<IActionResult> SignUp([FromBody] SignUpResource signUpResource, CancellationToken cancellationToken)
     {
         var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(signUpResource);
-        var result = await userCommandService.Handle(signUpCommand);
+        var result = await userCommandService.Handle(signUpCommand, cancellationToken);
         if (result.IsFailure) return BadRequest(result.Message);
         return Ok(new { message = "User created successfully" });
     }

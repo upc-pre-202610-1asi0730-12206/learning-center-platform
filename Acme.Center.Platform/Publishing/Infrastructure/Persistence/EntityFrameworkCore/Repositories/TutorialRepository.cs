@@ -3,6 +3,10 @@ using Acme.Center.Platform.Publishing.Domain.Repositories;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
@@ -15,32 +19,32 @@ namespace Acme.Center.Platform.Publishing.Infrastructure.Persistence.EntityFrame
 public class TutorialRepository(AppDbContext context) : BaseRepository<Tutorial>(context), ITutorialRepository
 {
     // <inheritdoc />
-    public async Task<IEnumerable<Tutorial>> FindByCategoryIdAsync(int categoryId)
+    public async Task<IEnumerable<Tutorial>> FindByCategoryIdAsync(int categoryId, CancellationToken cancellationToken)
     {
         return await Context.Set<Tutorial>()
             .Include(tutorial => tutorial.Category)
             .Where(tutorial => tutorial.CategoryId == categoryId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<bool> ExistsByTitleAsync(string title)
+    public async Task<bool> ExistsByTitleAsync(string title, CancellationToken cancellationToken)
     {
-        return await Context.Set<Tutorial>().AnyAsync(tutorial => tutorial.Title == title);
-    }
-
-    // <inheritdoc />
-    public new async Task<Tutorial?> FindByIdAsync(int id)
-    {
-        return await Context.Set<Tutorial>()
-            .Include(tutorial => tutorial.Category)
-            .FirstOrDefaultAsync(tutorial => tutorial.Id == id);
+        return await Context.Set<Tutorial>().AnyAsync(tutorial => tutorial.Title == title, cancellationToken);
     }
 
     // <inheritdoc />
-    public new async Task<IEnumerable<Tutorial>> ListAsync()
+    public new async Task<Tutorial?> FindByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await Context.Set<Tutorial>()
             .Include(tutorial => tutorial.Category)
-            .ToListAsync();
+            .FirstOrDefaultAsync(tutorial => tutorial.Id == id, cancellationToken);
+    }
+
+    // <inheritdoc />
+    public new async Task<IEnumerable<Tutorial>> ListAsync(CancellationToken cancellationToken)
+    {
+        return await Context.Set<Tutorial>()
+            .Include(tutorial => tutorial.Category)
+            .ToListAsync(cancellationToken);
     }
 }

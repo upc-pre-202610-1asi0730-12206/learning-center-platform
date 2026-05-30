@@ -5,6 +5,10 @@ using Acme.Center.Platform.Publishing.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Transform;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 
@@ -20,6 +24,7 @@ public class CategoryTutorialsController(ITutorialQueryService tutorialQueryServ
     /// <param name="categoryId">
     ///     The category id
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The list of <see cref="TutorialResource" /> tutorials
     /// </returns>
@@ -29,10 +34,10 @@ public class CategoryTutorialsController(ITutorialQueryService tutorialQueryServ
         Description = "Get all tutorials by category id",
         OperationId = "GetAllTutorialsByCategoryId")]
     [SwaggerResponse(StatusCodes.Status200OK, "The list of tutorials", typeof(IEnumerable<TutorialResource>))]
-    public async Task<IActionResult> GetTutorialsByCategoryId(int categoryId)
+    public async Task<IActionResult> GetTutorialsByCategoryId(int categoryId, CancellationToken cancellationToken)
     {
         var getTutorialsByCategoryIdQuery = new GetAllTutorialsByCategoryIdQuery(categoryId);
-        var tutorials = await tutorialQueryService.Handle(getTutorialsByCategoryIdQuery);
+        var tutorials = await tutorialQueryService.Handle(getTutorialsByCategoryIdQuery, cancellationToken);
         var tutorialResources = tutorials.Select(TutorialResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(tutorialResources);
     }

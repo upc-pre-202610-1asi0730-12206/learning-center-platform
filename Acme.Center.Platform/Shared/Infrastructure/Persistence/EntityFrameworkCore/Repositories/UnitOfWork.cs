@@ -1,5 +1,7 @@
 using Acme.Center.Platform.Shared.Domain.Repositories;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
@@ -16,8 +18,8 @@ namespace Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFramework
 public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
     // inheritedDoc
-    public async Task CompleteAsync()
+    public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

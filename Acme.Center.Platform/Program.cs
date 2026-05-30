@@ -1,3 +1,4 @@
+using Acme.Center.Platform.Iam.Application.Acl;
 using Acme.Center.Platform.Iam.Application.Internal.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.OutboundServices;
 using Acme.Center.Platform.Iam.Application.Internal.QueryServices;
@@ -9,7 +10,6 @@ using Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Extensions;
 using Acme.Center.Platform.Iam.Infrastructure.Tokens.Jwt.Configuration;
 using Acme.Center.Platform.Iam.Infrastructure.Tokens.Jwt.Services;
 using Acme.Center.Platform.Iam.Interfaces.Acl;
-using Acme.Center.Platform.Iam.Interfaces.Acl.Services;
 using Acme.Center.Platform.Profiles.Application.CommandServices;
 using Acme.Center.Platform.Profiles.Application.Internal.CommandServices;
 using Acme.Center.Platform.Profiles.Application.Internal.QueryServices;

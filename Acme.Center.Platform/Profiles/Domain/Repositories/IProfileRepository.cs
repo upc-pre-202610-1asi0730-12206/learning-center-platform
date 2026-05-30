@@ -1,6 +1,8 @@
 using Acme.Center.Platform.Profiles.Domain.Model.Aggregates;
 using Acme.Center.Platform.Profiles.Domain.Model.ValueObjects;
 using Acme.Center.Platform.Shared.Domain.Repositories;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Profiles.Domain.Repositories;
 
@@ -15,8 +17,9 @@ public interface IProfileRepository : IBaseRepository<Profile>
     /// <param name="email">
     ///     The <see cref="EmailAddress" /> email address to search for
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The <see cref="Profile" /> if found, otherwise null
     /// </returns>
-    Task<Profile?> FindProfileByEmailAsync(EmailAddress email);
+    Task<Profile?> FindProfileByEmailAsync(EmailAddress email, CancellationToken cancellationToken);
 }

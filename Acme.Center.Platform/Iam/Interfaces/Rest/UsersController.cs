@@ -6,6 +6,10 @@ using Acme.Center.Platform.Iam.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Transform;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 
@@ -29,6 +33,7 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
      *     Get user by id endpoint. It allows to get a user by id
      * </summary>
      * <param name="id">The user id</param>
+     * <param name="cancellationToken">The cancellation token.</param>
      * <returns>The user resource</returns>
      */
     [HttpGet("{id}")]
@@ -37,10 +42,10 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
         Description = "Get a user by its id",
         OperationId = "GetUserById")]
     [SwaggerResponse(StatusCodes.Status200OK, "The user was found", typeof(UserResource))]
-    public async Task<IActionResult> GetUserById(int id)
+    public async Task<IActionResult> GetUserById(int id, CancellationToken cancellationToken)
     {
         var getUserByIdQuery = new GetUserByIdQuery(id);
-        var user = await userQueryService.Handle(getUserByIdQuery);
+        var user = await userQueryService.Handle(getUserByIdQuery, cancellationToken);
         var userResource = UserResourceFromEntityAssembler.ToResourceFromEntity(user!);
         return Ok(userResource);
     }
@@ -57,10 +62,10 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
         Description = "Get all users",
         OperationId = "GetAllUsers")]
     [SwaggerResponse(StatusCodes.Status200OK, "The users were found", typeof(IEnumerable<UserResource>))]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
     {
         var getAllUsersQuery = new GetAllUsersQuery();
-        var users = await userQueryService.Handle(getAllUsersQuery);
+        var users = await userQueryService.Handle(getAllUsersQuery, cancellationToken);
         var userResources = users.Select(UserResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(userResources);
     }

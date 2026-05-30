@@ -1,5 +1,8 @@
 using Acme.Center.Platform.Publishing.Domain.Model.Aggregate;
 using Acme.Center.Platform.Shared.Domain.Repositories;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Domain.Repositories;
 
@@ -14,10 +17,11 @@ public interface ITutorialRepository : IBaseRepository<Tutorial>
     /// <param name="categoryId">
     ///     The id of the category to find tutorials by.
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     A collection of tutorials that belong to the category.
     /// </returns>
-    Task<IEnumerable<Tutorial>> FindByCategoryIdAsync(int categoryId);
+    Task<IEnumerable<Tutorial>> FindByCategoryIdAsync(int categoryId, CancellationToken cancellationToken);
 
-    Task<bool> ExistsByTitleAsync(string title);
+    Task<bool> ExistsByTitleAsync(string title, CancellationToken cancellationToken);
 }

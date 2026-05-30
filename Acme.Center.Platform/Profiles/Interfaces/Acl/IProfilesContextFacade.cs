@@ -1,3 +1,6 @@
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Acme.Center.Platform.Profiles.Interfaces.Acl;
 
 /// <summary>
@@ -32,6 +35,7 @@ public interface IProfilesContextFacade
     /// <param name="country">
     ///     Country of the profile
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The id of the created profile if successful, 0 otherwise
     /// </returns>
@@ -42,7 +46,8 @@ public interface IProfilesContextFacade
         string number,
         string city,
         string postalCode,
-        string country);
+        string country,
+        CancellationToken cancellationToken);
 
     /// <summary>
     ///     Fetch the profile id by email
@@ -50,8 +55,9 @@ public interface IProfilesContextFacade
     /// <param name="email">
     ///     Email of the profile to fetch
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The id of the profile if found, 0 otherwise
     /// </returns>
-    Task<int> FetchProfileIdByEmail(string email);
+    Task<int> FetchProfileIdByEmail(string email, CancellationToken cancellationToken);
 }

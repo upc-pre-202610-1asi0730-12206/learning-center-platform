@@ -5,7 +5,7 @@ using Acme.Center.Platform.Profiles.Domain.Model.Queries;
 using Acme.Center.Platform.Profiles.Domain.Model.ValueObjects;
 using Acme.Center.Platform.Profiles.Interfaces.Acl;
 
-namespace Acme.Center.Platform.Profiles.Application.ACL;
+namespace Acme.Center.Platform.Profiles.Application.Acl;
 
 /// <summary>
 ///     Facade for the profiles context
@@ -24,19 +24,19 @@ public class ProfilesContextFacade(
     // inheritedDoc
     public async Task<int> CreateProfile(string firstName, string lastName, string email, string street, string number,
         string city,
-        string postalCode, string country)
+        string postalCode, string country, CancellationToken cancellationToken)
     {
         var createProfileCommand =
             new CreateProfileCommand(firstName, lastName, email, street, number, city, postalCode, country);
-        var result = await profileCommandService.Handle(createProfileCommand);
+        var result = await profileCommandService.Handle(createProfileCommand, cancellationToken);
         return result.Value?.Id ?? 0;
     }
 
     // inheritedDoc
-    public async Task<int> FetchProfileIdByEmail(string email)
+    public async Task<int> FetchProfileIdByEmail(string email, CancellationToken cancellationToken)
     {
         var getProfileByEmailQuery = new GetProfileByEmailQuery(new EmailAddress(email));
-        var profile = await profileQueryService.Handle(getProfileByEmailQuery);
+        var profile = await profileQueryService.Handle(getProfileByEmailQuery, cancellationToken);
         return profile?.Id ?? 0;
     }
 }

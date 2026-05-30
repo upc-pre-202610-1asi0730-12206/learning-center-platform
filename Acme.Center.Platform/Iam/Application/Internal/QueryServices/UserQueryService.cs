@@ -2,6 +2,9 @@ using Acme.Center.Platform.Iam.Domain.Model.Aggregates;
 using Acme.Center.Platform.Iam.Domain.Model.Queries;
 using Acme.Center.Platform.Iam.Domain.Repositories;
 using Acme.Center.Platform.Iam.Domain.Services;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Iam.Application.Internal.QueryServices;
 
@@ -20,11 +23,12 @@ public class UserQueryService(IUserRepository userRepository) : IUserQueryServic
      *     Handle get user by id query
      * </summary>
      * <param name="query">The query object containing the user id to search</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The user</returns>
      */
-    public async Task<User?> Handle(GetUserByIdQuery query)
+    public async Task<User?> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        return await userRepository.FindByIdAsync(query.Id);
+        return await userRepository.FindByIdAsync(query.Id, cancellationToken);
     }
 
     /**
@@ -32,11 +36,12 @@ public class UserQueryService(IUserRepository userRepository) : IUserQueryServic
      *     Handle get user by username query
      * </summary>
      * <param name="query">The query object for getting all users</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The user</returns>
      */
-    public async Task<IEnumerable<User>> Handle(GetAllUsersQuery query)
+    public async Task<IEnumerable<User>> Handle(GetAllUsersQuery query, CancellationToken cancellationToken)
     {
-        return await userRepository.ListAsync();
+        return await userRepository.ListAsync(cancellationToken);
     }
 
     /**
@@ -44,10 +49,11 @@ public class UserQueryService(IUserRepository userRepository) : IUserQueryServic
      *     Handle get user by username query
      * </summary>
      * <param name="query">The query object containing the username to search</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The user</returns>
      */
-    public async Task<User?> Handle(GetUserByUsernameQuery query)
+    public async Task<User?> Handle(GetUserByUsernameQuery query, CancellationToken cancellationToken)
     {
-        return await userRepository.FindByUsernameAsync(query.Username);
+        return await userRepository.FindByUsernameAsync(query.Username, cancellationToken);
     }
 }

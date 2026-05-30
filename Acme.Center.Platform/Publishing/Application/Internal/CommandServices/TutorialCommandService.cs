@@ -4,6 +4,8 @@ using Acme.Center.Platform.Publishing.Domain.Model.Commands;
 using Acme.Center.Platform.Publishing.Domain.Repositories;
 using Acme.Center.Platform.Shared.Application.Model;
 using Acme.Center.Platform.Shared.Domain.Repositories;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Application.Internal.CommandServices;
 
@@ -14,25 +16,25 @@ public class TutorialCommandService(
     : ITutorialCommandService
 {
     /// <inheritdoc />
-    public async Task<Result<Tutorial>> Handle(AddVideoAssetToTutorialCommand command)
+    public async Task<Result<Tutorial>> Handle(AddVideoAssetToTutorialCommand command, CancellationToken cancellationToken)
     {
-        var tutorial = await tutorialRepository.FindByIdAsync(command.TutorialId);
+        var tutorial = await tutorialRepository.FindByIdAsync(command.TutorialId, cancellationToken);
         if (tutorial is null) return Result<Tutorial>.Failure("Tutorial not found");
         tutorial.AddVideo(command.VideoUrl);
-        await unitOfWork.CompleteAsync();
+        await unitOfWork.CompleteAsync(cancellationToken);
         return Result<Tutorial>.Success(tutorial);
     }
 
     /// <inheritdoc />
-    public async Task<Result<Tutorial>> Handle(CreateTutorialCommand command)
+    public async Task<Result<Tutorial>> Handle(CreateTutorialCommand command, CancellationToken cancellationToken)
     {
-        var category = await categoryRepository.FindByIdAsync(command.CategoryId);
+        var category = await categoryRepository.FindByIdAsync(command.CategoryId, cancellationToken);
         if (category is null) return Result<Tutorial>.Failure("Category not found");
-        if (await tutorialRepository.ExistsByTitleAsync(command.Title))
+        if (await tutorialRepository.ExistsByTitleAsync(command.Title, cancellationToken))
             return Result<Tutorial>.Failure("Tutorial with the same title already exists");
         var tutorial = new Tutorial(command);
-        await tutorialRepository.AddAsync(tutorial);
-        await unitOfWork.CompleteAsync();
+        await tutorialRepository.AddAsync(tutorial, cancellationToken);
+        await unitOfWork.CompleteAsync(cancellationToken);
         tutorial.Category = category;
         return Result<Tutorial>.Success(tutorial);
     }

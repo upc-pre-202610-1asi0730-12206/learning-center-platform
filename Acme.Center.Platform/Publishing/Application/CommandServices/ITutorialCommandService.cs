@@ -1,6 +1,8 @@
 using Acme.Center.Platform.Publishing.Domain.Model.Aggregate;
 using Acme.Center.Platform.Publishing.Domain.Model.Commands;
 using Acme.Center.Platform.Shared.Application.Model;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Application.CommandServices;
 
@@ -15,10 +17,11 @@ public interface ITutorialCommandService
     /// <param name="command">
     ///     The <see cref="AddVideoAssetToTutorialCommand" /> command to handle.
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The updated <see cref="Tutorial" /> entity.
     /// </returns>
-    Task<Result<Tutorial>> Handle(AddVideoAssetToTutorialCommand command);
+    Task<Result<Tutorial>> Handle(AddVideoAssetToTutorialCommand command, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Handles the create tutorial command in the ACME Learning Center Platform.
@@ -26,8 +29,9 @@ public interface ITutorialCommandService
     /// <param name="command">
     ///     The <see cref="CreateTutorialCommand" /> command to handle.
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The created <see cref="Tutorial" /> entity.
     /// </returns>
-    Task<Result<Tutorial>> Handle(CreateTutorialCommand command);
+    Task<Result<Tutorial>> Handle(CreateTutorialCommand command, CancellationToken cancellationToken);
 }

@@ -3,6 +3,9 @@ using Acme.Center.Platform.Profiles.Domain.Model.ValueObjects;
 using Acme.Center.Platform.Profiles.Domain.Repositories;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Acme.Center.Platform.Profiles.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
@@ -16,8 +19,8 @@ public class ProfileRepository(AppDbContext context)
     : BaseRepository<Profile>(context), IProfileRepository
 {
     /// <inheritdoc />
-    public async Task<Profile?> FindProfileByEmailAsync(EmailAddress email)
+    public async Task<Profile?> FindProfileByEmailAsync(EmailAddress email, CancellationToken cancellationToken)
     {
-        return Context.Set<Profile>().FirstOrDefault(p => p.Email == email);
+        return await Context.Set<Profile>().FirstOrDefaultAsync(p => p.Email == email, cancellationToken);
     }
 }

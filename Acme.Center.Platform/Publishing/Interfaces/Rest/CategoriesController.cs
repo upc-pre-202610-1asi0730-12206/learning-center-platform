@@ -6,6 +6,10 @@ using Acme.Center.Platform.Publishing.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Transform;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 
@@ -32,6 +36,7 @@ public class CategoriesController(
     /// <param name="categoryId">
     ///     The category id
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The <see cref="CategoryResource" /> category
     /// </returns>
@@ -42,10 +47,10 @@ public class CategoriesController(
         OperationId = "GetAllCategories")]
     [SwaggerResponse(StatusCodes.Status200OK, "The list of categories", typeof(CategoryResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "No categories found")]
-    public async Task<IActionResult> GetCategoryById(int categoryId)
+    public async Task<IActionResult> GetCategoryById(int categoryId, CancellationToken cancellationToken)
     {
         var getCategoryByIdQuery = new GetCategoryByIdQuery(categoryId);
-        var category = await categoryQueryService.Handle(getCategoryByIdQuery);
+        var category = await categoryQueryService.Handle(getCategoryByIdQuery, cancellationToken);
         if (category is null) return NotFound();
         var resource = CategoryResourceFromEntityAssembler.ToResourceFromEntity(category);
         return Ok(resource);
@@ -57,6 +62,7 @@ public class CategoriesController(
     /// <param name="resource">
     ///     The <see cref="CreateCategoryResource" /> category resource
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The <see cref="CategoryResource" /> category created, or a bad request if the category could not be created
     /// </returns>
@@ -67,10 +73,10 @@ public class CategoriesController(
         OperationId = "CreateCategory")]
     [SwaggerResponse(StatusCodes.Status201Created, "The category was created", typeof(CategoryResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The category could not be created")]
-    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryResource resource)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryResource resource, CancellationToken cancellationToken)
     {
         var createCategoryCommand = CreateCategoryCommandFromResourceAssembler.ToCommandFromResource(resource);
-        var result = await categoryCommandService.Handle(createCategoryCommand);
+        var result = await categoryCommandService.Handle(createCategoryCommand, cancellationToken);
         if (result.IsFailure) return BadRequest(result.Message);
         var category = result.Value;
         var categoryResource = CategoryResourceFromEntityAssembler.ToResourceFromEntity(category);
@@ -80,6 +86,7 @@ public class CategoriesController(
     /// <summary>
     ///     Get all categories
     /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     The list of <see cref="CategoryResource" /> categories
     /// </returns>
@@ -89,9 +96,9 @@ public class CategoriesController(
         Description = "Get all categories",
         OperationId = "GetAllCategories")]
     [SwaggerResponse(StatusCodes.Status200OK, "The list of categories", typeof(IEnumerable<CategoryResource>))]
-    public async Task<IActionResult> GetAllCategories()
+    public async Task<IActionResult> GetAllCategories(CancellationToken cancellationToken)
     {
-        var categories = await categoryQueryService.Handle(new GetAllCategoriesQuery());
+        var categories = await categoryQueryService.Handle(new GetAllCategoriesQuery(), cancellationToken);
         var categoryResources = categories.Select(CategoryResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(categoryResources);
     }

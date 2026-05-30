@@ -2,6 +2,9 @@ using Acme.Center.Platform.Publishing.Application.QueryServices;
 using Acme.Center.Platform.Publishing.Domain.Model.Aggregate;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
 using Acme.Center.Platform.Publishing.Domain.Repositories;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Application.Internal.QueryServices;
 
@@ -15,20 +18,20 @@ public class TutorialQueryService(ITutorialRepository tutorialRepository) : ITut
 
 {
     /// <inheritdoc />
-    public async Task<Tutorial?> Handle(GetTutorialByIdQuery query)
+    public async Task<Tutorial?> Handle(GetTutorialByIdQuery query, CancellationToken cancellationToken)
     {
-        return await tutorialRepository.FindByIdAsync(query.TutorialId);
+        return await tutorialRepository.FindByIdAsync(query.TutorialId, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Tutorial>> Handle(GetAllTutorialsQuery query)
+    public async Task<IEnumerable<Tutorial>> Handle(GetAllTutorialsQuery query, CancellationToken cancellationToken)
     {
-        return await tutorialRepository.ListAsync();
+        return await tutorialRepository.ListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Tutorial>> Handle(GetAllTutorialsByCategoryIdQuery query)
+    public async Task<IEnumerable<Tutorial>> Handle(GetAllTutorialsByCategoryIdQuery query, CancellationToken cancellationToken)
     {
-        return await tutorialRepository.FindByCategoryIdAsync(query.CategoryId);
+        return await tutorialRepository.FindByCategoryIdAsync(query.CategoryId, cancellationToken);
     }
 }

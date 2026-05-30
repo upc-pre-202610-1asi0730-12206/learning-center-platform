@@ -1,5 +1,8 @@
 using Acme.Center.Platform.Publishing.Domain.Model.Entities;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Application.QueryServices;
 
@@ -14,8 +17,9 @@ public interface ICategoryQueryService
     /// <param name="query">
     ///     The <see cref="GetCategoryByIdQuery" /> query to handle.
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    Task<Category?> Handle(GetCategoryByIdQuery query);
+    Task<Category?> Handle(GetCategoryByIdQuery query, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Handles the get all categories query in the ACME Learning Center Platform.
@@ -23,8 +27,9 @@ public interface ICategoryQueryService
     /// <param name="query">
     ///     The <see cref="GetAllCategoriesQuery" /> query to handle.
     /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     A collection of all categories in the platform.
     /// </returns>
-    Task<IEnumerable<Category>> Handle(GetAllCategoriesQuery query);
+    Task<IEnumerable<Category>> Handle(GetAllCategoriesQuery query, CancellationToken cancellationToken);
 }

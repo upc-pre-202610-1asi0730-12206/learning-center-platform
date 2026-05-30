@@ -18,16 +18,18 @@ public interface IUserRepository : IBaseRepository<User>
      *     Find a user by id
      * </summary>
      * <param name="username">The username to search</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The user</returns>
      */
-    Task<User?> FindByUsernameAsync(string username);
+    Task<User?> FindByUsernameAsync(string username, CancellationToken cancellationToken);
 
     /**
      * <summary>
      *     Check if a user exists by username
      * </summary>
      * <param name="username">The username to search</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>True if the user exists, false otherwise</returns>
      */
-    bool ExistsByUsername(string username);
+    bool ExistsByUsername(string username, CancellationToken cancellationToken);
 }

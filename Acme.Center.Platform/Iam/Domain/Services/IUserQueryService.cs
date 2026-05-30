@@ -18,25 +18,28 @@ public interface IUserQueryService
      *     Handle get user by id query
      * </summary>
      * <param name="query">The get user by id query</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The user if found, null otherwise</returns>
      */
-    Task<User?> Handle(GetUserByIdQuery query);
+    Task<User?> Handle(GetUserByIdQuery query, CancellationToken cancellationToken);
 
     /**
      * <summary>
      *     Handle get all users query
      * </summary>
      * <param name="query">The get all users query</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The list of users</returns>
      */
-    Task<IEnumerable<User>> Handle(GetAllUsersQuery query);
+    Task<IEnumerable<User>> Handle(GetAllUsersQuery query, CancellationToken cancellationToken);
 
     /**
      * <summary>
      *     Handle get user by username query
      * </summary>
      * <param name="query">The get user by username query</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The user if found, null otherwise</returns>
      */
-    Task<User?> Handle(GetUserByUsernameQuery query);
+    Task<User?> Handle(GetUserByUsernameQuery query, CancellationToken cancellationToken);
 }

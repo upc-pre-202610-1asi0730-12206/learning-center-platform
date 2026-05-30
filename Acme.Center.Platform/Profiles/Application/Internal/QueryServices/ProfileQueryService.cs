@@ -2,6 +2,9 @@ using Acme.Center.Platform.Profiles.Application.QueryServices;
 using Acme.Center.Platform.Profiles.Domain.Model.Aggregates;
 using Acme.Center.Platform.Profiles.Domain.Model.Queries;
 using Acme.Center.Platform.Profiles.Domain.Repositories;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Profiles.Application.Internal.QueryServices;
 
@@ -14,20 +17,20 @@ namespace Acme.Center.Platform.Profiles.Application.Internal.QueryServices;
 public class ProfileQueryService(IProfileRepository profileRepository) : IProfileQueryService
 {
     /// <inheritdoc />
-    public async Task<IEnumerable<Profile>> Handle(GetAllProfilesQuery query)
+    public async Task<IEnumerable<Profile>> Handle(GetAllProfilesQuery query, CancellationToken cancellationToken)
     {
-        return await profileRepository.ListAsync();
+        return await profileRepository.ListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<Profile?> Handle(GetProfileByEmailQuery query)
+    public async Task<Profile?> Handle(GetProfileByEmailQuery query, CancellationToken cancellationToken)
     {
-        return await profileRepository.FindProfileByEmailAsync(query.Email);
+        return await profileRepository.FindProfileByEmailAsync(query.Email, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<Profile?> Handle(GetProfileByIdQuery query)
+    public async Task<Profile?> Handle(GetProfileByIdQuery query, CancellationToken cancellationToken)
     {
-        return await profileRepository.FindByIdAsync(query.ProfileId);
+        return await profileRepository.FindByIdAsync(query.ProfileId, cancellationToken);
     }
 }

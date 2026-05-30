@@ -6,6 +6,8 @@ using Acme.Center.Platform.Publishing.Domain.Repositories;
 using Acme.Center.Platform.Shared.Application.Model;
 using Acme.Center.Platform.Shared.Domain.Repositories;
 using Cortex.Mediator;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Application.Internal.CommandServices;
 
@@ -28,16 +30,16 @@ public class CategoryCommandService(
     : ICategoryCommandService
 {
     /// <inheritdoc />
-    public async Task<Result<Category>> Handle(CreateCategoryCommand command)
+    public async Task<Result<Category>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
         var category = new Category(command);
         try
         {
-            await categoryRepository.AddAsync(category);
-            await unitOfWork.CompleteAsync();
+            await categoryRepository.AddAsync(category, cancellationToken);
+            await unitOfWork.CompleteAsync(cancellationToken);
 
             // Publish the domain event after the category is created
-            await domainEventPublisher.PublishAsync(new CategoryCreatedEvent(category.Name));
+            await domainEventPublisher.PublishAsync(new CategoryCreatedEvent(category.Name), cancellationToken);
 
             // Return the created category
             return Result<Category>.Success(category);

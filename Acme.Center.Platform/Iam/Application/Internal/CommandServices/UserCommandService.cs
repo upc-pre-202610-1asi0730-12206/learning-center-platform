@@ -28,11 +28,12 @@ public class UserCommandService(
      *     Handle sign in command
      * </summary>
      * <param name="command">The sign in command</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The authenticated user and the JWT token</returns>
      */
-    public async Task<Result<(User user, string token)>> Handle(SignInCommand command)
+    public async Task<Result<(User user, string token)>> Handle(SignInCommand command, CancellationToken cancellationToken)
     {
-        var user = await userRepository.FindByUsernameAsync(command.Username);
+        var user = await userRepository.FindByUsernameAsync(command.Username, cancellationToken);
 
         if (user == null || !hashingService.VerifyPassword(command.Password, user.PasswordHash))
             return Result<(User user, string token)>.Failure("Invalid username or password");
@@ -47,19 +48,20 @@ public class UserCommandService(
      *     Handle sign up command
      * </summary>
      * <param name="command">The sign up command</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>A confirmation message on successful creation.</returns>
      */
-    public async Task<Result> Handle(SignUpCommand command)
+    public async Task<Result> Handle(SignUpCommand command, CancellationToken cancellationToken)
     {
-        if (userRepository.ExistsByUsername(command.Username))
+        if (userRepository.ExistsByUsername(command.Username, cancellationToken))
             return Result.Failure($"Username {command.Username} is already taken");
 
         var hashedPassword = hashingService.HashPassword(command.Password);
         var user = new User(command.Username, hashedPassword);
         try
         {
-            await userRepository.AddAsync(user);
-            await unitOfWork.CompleteAsync();
+            await userRepository.AddAsync(user, cancellationToken);
+            await unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
         }
         catch (Exception e)

@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Acme.Center.Platform.Shared.Domain.Repositories;
 
 /// <summary>
@@ -17,8 +21,9 @@ public interface IBaseRepository<TEntity>
     /// <param name="entity">
     ///     The entity to add
     /// </param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns></returns>
-    Task AddAsync(TEntity entity);
+    Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Find an entity by its id
@@ -26,10 +31,11 @@ public interface IBaseRepository<TEntity>
     /// <param name="id">
     ///     The id of the entity to find
     /// </param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>
     ///     The entity if found, otherwise null
     /// </returns>
-    Task<TEntity?> FindByIdAsync(int id);
+    Task<TEntity?> FindByIdAsync(int id, CancellationToken cancellationToken = default);
 
     void Update(TEntity entity);
 
@@ -44,8 +50,9 @@ public interface IBaseRepository<TEntity>
     /// <summary>
     ///     List all entities in the repository
     /// </summary>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>
     ///     A list of all entities in the repository
     /// </returns>
-    Task<IEnumerable<TEntity>> ListAsync();
+    Task<IEnumerable<TEntity>> ListAsync(CancellationToken cancellationToken = default);
 }

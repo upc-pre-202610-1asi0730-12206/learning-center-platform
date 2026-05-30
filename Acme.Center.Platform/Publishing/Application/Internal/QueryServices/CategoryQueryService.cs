@@ -2,6 +2,9 @@ using Acme.Center.Platform.Publishing.Application.QueryServices;
 using Acme.Center.Platform.Publishing.Domain.Model.Entities;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
 using Acme.Center.Platform.Publishing.Domain.Repositories;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Acme.Center.Platform.Publishing.Application.Internal.QueryServices;
 
@@ -15,14 +18,14 @@ public class CategoryQueryService(ICategoryRepository categoryRepository)
     : ICategoryQueryService
 {
     /// <inheritdoc />
-    public async Task<Category?> Handle(GetCategoryByIdQuery query)
+    public async Task<Category?> Handle(GetCategoryByIdQuery query, CancellationToken cancellationToken)
     {
-        return await categoryRepository.FindByIdAsync(query.CategoryId);
+        return await categoryRepository.FindByIdAsync(query.CategoryId, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Category>> Handle(GetAllCategoriesQuery query)
+    public async Task<IEnumerable<Category>> Handle(GetAllCategoriesQuery query, CancellationToken cancellationToken)
     {
-        return await categoryRepository.ListAsync();
+        return await categoryRepository.ListAsync(cancellationToken);
     }
 }

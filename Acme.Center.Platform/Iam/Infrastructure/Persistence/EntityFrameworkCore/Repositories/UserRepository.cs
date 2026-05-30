@@ -21,11 +21,12 @@ public class UserRepository(AppDbContext context) : BaseRepository<User>(context
      *     Find a user by username
      * </summary>
      * <param name="username">The username to search</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>The user</returns>
      */
-    public async Task<User?> FindByUsernameAsync(string username)
+    public async Task<User?> FindByUsernameAsync(string username, CancellationToken cancellationToken)
     {
-        return await Context.Set<User>().FirstOrDefaultAsync(user => user.Username.Equals(username));
+        return await Context.Set<User>().FirstOrDefaultAsync(user => user.Username.Equals(username), cancellationToken);
     }
 
     /**
@@ -33,9 +34,10 @@ public class UserRepository(AppDbContext context) : BaseRepository<User>(context
      *     Check if a user exists by username
      * </summary>
      * <param name="username">The username to search</param>
+     * <param name="cancellationToken">The cancellation token</param>
      * <returns>True if the user exists, false otherwise</returns>
      */
-    public bool ExistsByUsername(string username)
+    public bool ExistsByUsername(string username, CancellationToken cancellationToken)
     {
         return Context.Set<User>().Any(user => user.Username.Equals(username));
     }
