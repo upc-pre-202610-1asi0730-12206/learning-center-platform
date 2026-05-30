@@ -30,7 +30,8 @@ using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore
 using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,20 +97,8 @@ builder.Services.AddSwaggerGen(options =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = "Bearer",
-                    Type = ReferenceType.SecurityScheme
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    { [new OpenApiSecuritySchemeReference("bearer", document)] = [] });
     options.EnableAnnotations();
 });
 
@@ -151,12 +140,7 @@ builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCom
 
 // Add Cortex Mediator for Event Handling
 builder.Services.AddCortexMediator(
-    configuration: builder.Configuration,
-    handlerAssemblyMarkerTypes: [typeof(Program)], configure: options =>
-    {
-        options.AddOpenCommandPipelineBehavior(typeof(LoggingCommandBehavior<>));
-        //options.AddDefaultBehaviors();
-    });
+    handlerAssemblyMarkerTypes: [typeof(Program)]);
 
 
 var app = builder.Build();
