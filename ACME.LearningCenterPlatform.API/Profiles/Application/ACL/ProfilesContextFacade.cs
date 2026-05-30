@@ -1,7 +1,8 @@
+using ACME.LearningCenterPlatform.API.Profiles.Application.CommandServices;
+using ACME.LearningCenterPlatform.API.Profiles.Application.QueryServices;
 using ACME.LearningCenterPlatform.API.Profiles.Domain.Model.Commands;
 using ACME.LearningCenterPlatform.API.Profiles.Domain.Model.Queries;
 using ACME.LearningCenterPlatform.API.Profiles.Domain.Model.ValueObjects;
-using ACME.LearningCenterPlatform.API.Profiles.Domain.Services;
 using ACME.LearningCenterPlatform.API.Profiles.Interfaces.ACL;
 
 namespace ACME.LearningCenterPlatform.API.Profiles.Application.ACL;

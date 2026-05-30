@@ -10,10 +10,11 @@ using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Tokens.JWT.Configuratio
 using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Tokens.JWT.Services;
 using ACME.LearningCenterPlatform.API.IAM.Interfaces.ACL;
 using ACME.LearningCenterPlatform.API.IAM.Interfaces.ACL.Services;
+using ACME.LearningCenterPlatform.API.Profiles.Application.CommandServices;
 using ACME.LearningCenterPlatform.API.Profiles.Application.Internal.CommandServices;
 using ACME.LearningCenterPlatform.API.Profiles.Application.Internal.QueryServices;
+using ACME.LearningCenterPlatform.API.Profiles.Application.QueryServices;
 using ACME.LearningCenterPlatform.API.Profiles.Domain.Repositories;
-using ACME.LearningCenterPlatform.API.Profiles.Domain.Services;
 using ACME.LearningCenterPlatform.API.Profiles.Infrastructure.Persistence.EFC.Repositories;
 using ACME.LearningCenterPlatform.API.Publishing.Application.Internal.CommandServices;
 using ACME.LearningCenterPlatform.API.Publishing.Application.Internal.QueryServices;
