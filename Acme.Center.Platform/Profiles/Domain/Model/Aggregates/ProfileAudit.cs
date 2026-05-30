@@ -1,6 +1,5 @@
 using Acme.Center.Platform.Shared.Domain.Model.Entities;
 
-
 namespace Acme.Center.Platform.Profiles.Domain.Model.Aggregates;
 
 public partial class Profile : IAuditableEntity

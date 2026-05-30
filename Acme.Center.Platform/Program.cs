@@ -32,7 +32,6 @@ using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -69,7 +68,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    
     options.SwaggerDoc("v1",
         new OpenApiInfo
         {
@@ -98,7 +96,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer"
     });
     options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    { [new OpenApiSecuritySchemeReference("bearer", document)] = [] });
+        { [new OpenApiSecuritySchemeReference("bearer", document)] = [] });
     options.EnableAnnotations();
 });
 
@@ -140,7 +138,7 @@ builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCom
 
 // Add Cortex Mediator for Event Handling
 builder.Services.AddCortexMediator(
-    handlerAssemblyMarkerTypes: [typeof(Program)]);
+    [typeof(Program)]);
 
 
 var app = builder.Build();

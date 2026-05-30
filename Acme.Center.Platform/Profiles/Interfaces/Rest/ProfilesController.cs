@@ -16,7 +16,7 @@ namespace Acme.Center.Platform.Profiles.Interfaces.Rest;
 public class ProfilesController(
     IProfileCommandService profileCommandService,
     IProfileQueryService profileQueryService)
-: ControllerBase
+    : ControllerBase
 {
     [HttpGet("{profileId:int}")]
     [SwaggerOperation("Get Profile by Id", "Get a profile by its unique identifier.", OperationId = "GetProfileById")]

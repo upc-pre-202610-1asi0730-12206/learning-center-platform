@@ -4,18 +4,18 @@ using Acme.Center.Platform.Profiles.Interfaces.Rest.Resources;
 namespace Acme.Center.Platform.Profiles.Interfaces.Rest.Transform;
 
 /// <summary>
-/// Assembler to create a CreateProfileCommand command from a resource 
+///     Assembler to create a CreateProfileCommand command from a resource
 /// </summary>
 public static class CreateProfileCommandFromResourceAssembler
 {
     /// <summary>
-    /// Create a CreateProfileCommand command from a resource 
+    ///     Create a CreateProfileCommand command from a resource
     /// </summary>
     /// <param name="resource">
-    /// The <see cref="CreateProfileResource"/> resource to create the command from
+    ///     The <see cref="CreateProfileResource" /> resource to create the command from
     /// </param>
     /// <returns>
-    /// The <see cref="CreateProfileCommand"/> command created from the resource
+    ///     The <see cref="CreateProfileCommand" /> command created from the resource
     /// </returns>
     public static CreateProfileCommand ToCommandFromResource(CreateProfileResource resource)
     {

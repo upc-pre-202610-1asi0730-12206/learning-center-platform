@@ -7,12 +7,12 @@ using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore
 namespace Acme.Center.Platform.Profiles.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
 /// <summary>
-/// Profile repository implementation  
+///     Profile repository implementation
 /// </summary>
 /// <param name="context">
-/// The database context
+///     The database context
 /// </param>
-public class ProfileRepository(AppDbContext context) 
+public class ProfileRepository(AppDbContext context)
     : BaseRepository<Profile>(context), IProfileRepository
 {
     /// <inheritdoc />
