@@ -10,7 +10,7 @@ namespace Acme.Center.Platform.Iam.Domain.Model.Aggregates;
  *     This class is used to represent a user
  * </remarks>
  */
-public class User(string username, string passwordHash)
+public partial class User(string username, string passwordHash)
 {
     public User() : this(string.Empty, string.Empty)
     {
