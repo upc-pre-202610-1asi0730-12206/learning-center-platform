@@ -1,8 +1,8 @@
 using Acme.Center.Platform.Profiles.Domain.Model.Aggregates;
 using Acme.Center.Platform.Profiles.Domain.Model.ValueObjects;
 using Acme.Center.Platform.Profiles.Domain.Repositories;
-using Acme.Center.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
-using Acme.Center.Platform.Shared.Infrastructure.Persistence.EFC.Repositories;
+using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
+using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
 namespace Acme.Center.Platform.Profiles.Infrastructure.Persistence.EFC.Repositories;
 

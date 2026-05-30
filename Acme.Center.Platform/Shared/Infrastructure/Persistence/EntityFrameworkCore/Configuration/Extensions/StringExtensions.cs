@@ -1,6 +1,6 @@
 using Humanizer;
 
-namespace Acme.Center.Platform.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+namespace Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 
 /// <summary>
 ///     String extensions for the database context

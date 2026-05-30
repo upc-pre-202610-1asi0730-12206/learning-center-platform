@@ -1,7 +1,7 @@
 using Acme.Center.Platform.Publishing.Domain.Model.Aggregate;
 using Acme.Center.Platform.Publishing.Domain.Repositories;
-using Acme.Center.Platform.Shared.Infrastructure.Persistence.EFC.Configuration;
-using Acme.Center.Platform.Shared.Infrastructure.Persistence.EFC.Repositories;
+using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
+using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Acme.Center.Platform.Publishing.Infrastructure.Persistence.EFC.Repositories;

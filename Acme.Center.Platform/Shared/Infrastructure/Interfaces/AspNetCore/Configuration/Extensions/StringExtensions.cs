@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Acme.Center.Platform.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+namespace Acme.Center.Platform.Shared.Infrastructure.Interfaces.AspNetCore.Configuration.Extensions;
 
 /// <summary>
 ///     Extension methods for <see cref="string" />.
