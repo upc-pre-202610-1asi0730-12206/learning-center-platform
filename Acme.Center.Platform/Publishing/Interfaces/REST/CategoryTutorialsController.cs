@@ -1,6 +1,6 @@
 using System.Net.Mime;
+using Acme.Center.Platform.Publishing.Application.QueryServices;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
-using Acme.Center.Platform.Publishing.Domain.Services;
 using Acme.Center.Platform.Publishing.Interfaces.REST.Resources;
 using Acme.Center.Platform.Publishing.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;

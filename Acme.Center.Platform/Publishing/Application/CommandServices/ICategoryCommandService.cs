@@ -1,7 +1,7 @@
 using Acme.Center.Platform.Publishing.Domain.Model.Commands;
 using Acme.Center.Platform.Publishing.Domain.Model.Entities;
 
-namespace Acme.Center.Platform.Publishing.Domain.Services;
+namespace Acme.Center.Platform.Publishing.Application.CommandServices;
 
 /// <summary>
 ///     Represents the category command service in the ACME Learning Center Platform.

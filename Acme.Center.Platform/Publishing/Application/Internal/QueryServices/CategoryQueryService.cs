@@ -1,7 +1,7 @@
+using Acme.Center.Platform.Publishing.Application.QueryServices;
 using Acme.Center.Platform.Publishing.Domain.Model.Entities;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
 using Acme.Center.Platform.Publishing.Domain.Repositories;
-using Acme.Center.Platform.Publishing.Domain.Services;
 
 namespace Acme.Center.Platform.Publishing.Application.Internal.QueryServices;
 

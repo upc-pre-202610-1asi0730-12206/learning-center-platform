@@ -1,8 +1,8 @@
+using Acme.Center.Platform.Publishing.Application.CommandServices;
 using Acme.Center.Platform.Publishing.Domain.Model.Commands;
 using Acme.Center.Platform.Publishing.Domain.Model.Entities;
 using Acme.Center.Platform.Publishing.Domain.Model.Events;
 using Acme.Center.Platform.Publishing.Domain.Repositories;
-using Acme.Center.Platform.Publishing.Domain.Services;
 using Acme.Center.Platform.Shared.Domain.Repositories;
 using Cortex.Mediator;
 

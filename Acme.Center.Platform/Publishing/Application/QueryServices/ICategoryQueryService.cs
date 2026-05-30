@@ -1,7 +1,7 @@
 using Acme.Center.Platform.Publishing.Domain.Model.Entities;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
 
-namespace Acme.Center.Platform.Publishing.Domain.Services;
+namespace Acme.Center.Platform.Publishing.Application.QueryServices;
 
 /// <summary>
 ///     Represents the category query service in the ACME Learning Center Platform.

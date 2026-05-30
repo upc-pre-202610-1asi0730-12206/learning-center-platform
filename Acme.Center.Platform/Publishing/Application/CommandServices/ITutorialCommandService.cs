@@ -1,7 +1,7 @@
 using Acme.Center.Platform.Publishing.Domain.Model.Aggregate;
 using Acme.Center.Platform.Publishing.Domain.Model.Commands;
 
-namespace Acme.Center.Platform.Publishing.Domain.Services;
+namespace Acme.Center.Platform.Publishing.Application.CommandServices;
 
 /// <summary>
 ///     Represents the tutorial command service in the ACME Learning Center Platform.
