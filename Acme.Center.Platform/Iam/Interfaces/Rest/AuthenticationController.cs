@@ -1,5 +1,4 @@
 using System.Net.Mime;
-using Acme.Center.Platform.Iam.Domain.Services;
 using Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Attributes;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Transform;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Threading;
 using System.Threading.Tasks;
+using Acme.Center.Platform.Iam.Application.CommandServices;
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 

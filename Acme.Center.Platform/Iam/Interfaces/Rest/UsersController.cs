@@ -1,6 +1,5 @@
 using System.Net.Mime;
 using Acme.Center.Platform.Iam.Domain.Model.Queries;
-using Acme.Center.Platform.Iam.Domain.Services;
 using Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Attributes;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Transform;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Acme.Center.Platform.Iam.Application.QueryServices;
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 

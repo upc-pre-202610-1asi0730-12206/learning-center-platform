@@ -1,7 +1,7 @@
 using Acme.Center.Platform.Iam.Domain.Model.Aggregates;
 using Acme.Center.Platform.Iam.Domain.Model.Queries;
 
-namespace Acme.Center.Platform.Iam.Domain.Services;
+namespace Acme.Center.Platform.Iam.Application.QueryServices;
 
 /**
  * <summary>

@@ -2,7 +2,7 @@ using Acme.Center.Platform.Iam.Domain.Model.Aggregates;
 using Acme.Center.Platform.Iam.Domain.Model.Commands;
 using Acme.Center.Platform.Shared.Application.Model;
 
-namespace Acme.Center.Platform.Iam.Domain.Services;
+namespace Acme.Center.Platform.Iam.Application.CommandServices;
 
 /**
  * <summary>

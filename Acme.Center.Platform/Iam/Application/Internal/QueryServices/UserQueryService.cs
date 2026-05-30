@@ -1,10 +1,10 @@
 using Acme.Center.Platform.Iam.Domain.Model.Aggregates;
 using Acme.Center.Platform.Iam.Domain.Model.Queries;
 using Acme.Center.Platform.Iam.Domain.Repositories;
-using Acme.Center.Platform.Iam.Domain.Services;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Acme.Center.Platform.Iam.Application.QueryServices;
 
 namespace Acme.Center.Platform.Iam.Application.Internal.QueryServices;
 

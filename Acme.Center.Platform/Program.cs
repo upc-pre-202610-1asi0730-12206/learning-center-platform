@@ -1,9 +1,10 @@
 using Acme.Center.Platform.Iam.Application.Acl;
+using Acme.Center.Platform.Iam.Application.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.OutboundServices;
 using Acme.Center.Platform.Iam.Application.Internal.QueryServices;
+using Acme.Center.Platform.Iam.Application.QueryServices;
 using Acme.Center.Platform.Iam.Domain.Repositories;
-using Acme.Center.Platform.Iam.Domain.Services;
 using Acme.Center.Platform.Iam.Infrastructure.Hashing.BCrypt.Services;
 using Acme.Center.Platform.Iam.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Extensions;
