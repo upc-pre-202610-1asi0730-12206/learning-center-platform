@@ -2,8 +2,8 @@
 
 ## Project Overview
 
-The `Learning Center Platform` is an scalable backend application designed
- to manage educational content, user profiles, and authentication. Built with .NET, it adheres to Domain-Driven Design (DDD) principles and Clean Architecture, promoting modularity, maintainability, and testability.
+The `Learning Center Platform` is a robust and scalable backend application designed
+ to manage educational content, user profiles, and authentication. Built with .NET, it adheres to Domain-Driven Design (DDD) principles and implements Command Query Responsibility Segregation (CQRS), promoting modularity, maintainability, and testability.
 
 This platform is structured around distinct Bounded Contexts, ensuring clear separation of concerns and enabling independent development and
  deployment of core functionalities.
@@ -22,11 +22,12 @@ This platform is structured around distinct Bounded Contexts, ensuring clear sep
     *   Prerequisites
     *   Setup Instructions
 7.  Project Structure
-8.  License
+8.  Documentation
+9.  License
 
 ## Architecture Overview
 
-The project follows a Domain-Driven Design approach, organizing code into distinct layers with clear dependencies. This ensures that the domain model remains independent of external concerns like UI, databases, or external services.
+The project's architecture is driven by **Domain-Driven Design (DDD)** principles and implements **Command Query Responsibility Segregation (CQRS)**. This approach organizes the codebase to align closely with the business domain, separating operations that change state (Commands) from operations that read state (Queries).
 
 *   **Domain Layer**: Contains the core business logic, entities, aggregates, value objects, and domain services. It is the heart of the application and has no dependencies on other layers.
 *   **Application Layer**: Orchestrates domain objects to fulfill use cases (commands and queries). It defines application services, command handlers, and query handlers. It depends on the Domain layer.
@@ -49,6 +50,7 @@ The project embraces DDD to manage complexity in its core business domains:
 
 ## Key Features & Best Practices Implemented
 
+*   **Command Query Responsibility Segregation (CQRS)**: Commands are used to update data, and Queries are used to retrieve data. This separation allows for independent scaling and optimization of read and write models.
 *   **Cancellation Tokens**: Integrated across all asynchronous operations (application services, repositories, controllers, middleware) to enable graceful cancellation of long-running tasks, improving responsiveness and resource management.
 *   **Refined Error Management**:
     *   **`Result<T>` Pattern**: Used consistently in application services to
@@ -84,30 +86,62 @@ izes Entity Framework Core for data access, supporting
 
 ## Bounded Contexts
 
-### IAM (
-Identity and Access Management)
+The application is logically divided into the following Bounded Contexts, each managing a specific area of the business domain:
 
-Manages user authentication, registration, and authorization concerns.
+### IAM (Identity and Access Management)
 
+The IAM Bounded Context is responsible for all aspects of user identity, authentication, and access control within the platform. It provides the
+ foundational security mechanisms for the entire application.
+
+*   **Scope**: User authentication, registration, authorization, and token management.
+*   **Key Features**:
+    *   **User Registration**: Allows new users to securely sign up and create accounts.
+    *   **User Authentication**: Handles user sign-in
+, verifying credentials (username/password), and issuing secure JSON Web Tokens (JWTs) for subsequent authorized access.
+    *   **Token Management**: Generates, validates,
+ and manages the lifecycle of JWTs, ensuring secure session management.
+    *   **Password Hashing**: Securely stores
+ user passwords using robust, industry-standard hashing algorithms (BCrypt).
+    *   **User Management**: Provides functionalities for retrieving and managing user accounts (e.g., fetching user details by ID or username).
 *   **Aggregates**: `User`
-*   **Services**: `ITokenService`, `IHashingService`
-*   **API Endpoints**: `/api/v1/authentication`, `/api/v1/users`
+*   **Domain Services**: `ITokenService` (
+for JWT operations), `IHashingService` (for password security)
+*   **API Endpoints**: `/api/v1/authentication` (for sign-in/sign-
+up), `/api/v1/users` (for user queries)
 
 ### Profiles
 
-Handles the management of user profiles, including personal details.
+The Profiles Bounded Context manages the
+ personal and contact information associated with users. It focuses on maintaining accurate, consistent, and complete user profiles, which are distinct from their authentication credentials handled by IAM.
 
+*   **Scope**: Management of user-specific personal and contact details.
+*   **Key Features**:
+    *   **Profile Creation & Retrieval**:
+ Allows users to create and retrieve their personal profiles.
+    *   **Personal Information Management**: Stores and manages details such as first name, last name, and email address.
+    *   **Contact Information Management**: Handles street address details including street, number, city, postal code, and country.
+    *   **Data
+ Integrity**: Ensures that profile data adheres to defined business rules and formats.
 *   **Aggregates**: `Profile`
-*   **Value Objects**: `FullName`, `EmailAddress`, `StreetAddress`
+*   **Value Objects**: `FullName`, `EmailAddress`, `StreetAddress` (ensuring immutability and conceptual integrity of these data points)
 *   **API Endpoints**: `/api/v1/profiles`
 
 ### Publishing
 
-Manages educational content, such as tutorials and categories.
+The Publishing Bounded Context is dedicated to the
+ creation, organization, and management of educational content, such as tutorials and their associated assets. It defines the entire lifecycle of content from initial creation to approval and publication.
 
-*   **Aggregates**: `Tutorial`
-*   **Entities**: `Category`, `Asset` (and its specializations `VideoAsset`, `ImageAsset
-`, `ReadableContentAsset`)
+*   **Scope**: Content creation, organization,
+ asset management, and publishing workflow.
+*   **Key Features**:
+    *   **Content Creation**: Enables the creation of new tutorials with titles, summaries, and categorization.
+    *   **Category Management**: Provides functionalities to organize tutorials into logical categories, facilitating content discovery.
+    *   **Asset Management**:
+ Handles various types of content assets (images, videos, readable content items) that compose a tutorial, managing their status and content.
+    *   **Publishing Workflow**: Manages the status of tutorials and their assets through different stages (e.g., Draft, ReadyToEdit, ReadyToApproval, ApprovedAnd
+Locked), ensuring content quality and review processes.
+*   **Aggregates**: `Tutorial` (which includes its assets as part of its consistency boundary)
+*   **Entities**: `Category`, `Asset` (with specializations like `VideoAsset`, `ImageAsset`, `ReadableContentAsset`)
 *   **API Endpoints**: `/api/v1/categories`, `/api/v1/tutorials`
 
 ## Technologies Used
@@ -198,13 +232,20 @@ Acme.Center.Platform/
 │   ├── Domain/              # Base Repository, Unit of Work interfaces, common domain models
 │   ├── Infrastructure/      # Base Repository implementation, AppDbContext
 │   ├── Interfaces/          # ProblemDetailsFactory, common REST interfaces
-│   └── Resources/           # Shared localization files (Commons.resx, Errors/ErrorMessages.resx)
+│   └── Resources/           # Shared localization files (CommonMessages.resx, Errors/ErrorMessages.resx)
 ├── Program.cs               # Application startup and DI configuration
 ├── appsettings.json         # Configuration files
 └── Acme.Center.Platform.csproj # Project file
 ```
 
+## Documentation
+
+Comprehensive documentation, including architectural diagrams and detailed explanations of core components, can be found in the `docs/` directory.
+
+*   **Class Diagram**: [`docs/class-diagram.puml`](docs/class-diagram.puml)
+*   **Software Architecture**: [`docs/software-architecture.dsl`](docs/software-architecture.dsl)
+*   **User Stories**: [`docs/user-stories.md`](docs/user-stories.md)
+
 ## License
 
-This project is licensed
- under the Apache 2.0 License. See the LICENSE.md file for details.
+This project is licensed under the **MIT License**. See the [`LICENSE.md`](LICENSE.md) file for details.
