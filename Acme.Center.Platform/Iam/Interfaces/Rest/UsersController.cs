@@ -5,12 +5,15 @@ using Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Attributes;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Transform;
 using Acme.Center.Platform.Resources.Errors;
-using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails;
+using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails; // For ProblemDetailsFactory
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
-// For IamError enum
-// For ProblemDetailsFactory
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Acme.Center.Platform.Iam.Domain.Model; // For IamError enum
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 
@@ -53,7 +56,7 @@ public class UsersController(
             user,
             _errorLocalizer,
             _problemDetailsFactory,
-            foundUser => Ok(UserResourceFromEntityAssembler.ToResourceFromEntity(foundUser))
+            (foundUser) => Ok(UserResourceFromEntityAssembler.ToResourceFromEntity(foundUser))
         );
     }
 

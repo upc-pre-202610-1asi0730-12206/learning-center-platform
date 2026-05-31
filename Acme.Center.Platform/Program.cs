@@ -2,6 +2,7 @@ using Acme.Center.Platform.Iam.Application.Acl;
 using Acme.Center.Platform.Iam.Application.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.OutboundServices;
+using Acme.Center.Platform.Iam.Application.Internal.QueryServices;
 using Acme.Center.Platform.Iam.Application.QueryServices;
 using Acme.Center.Platform.Iam.Domain.Repositories;
 using Acme.Center.Platform.Iam.Infrastructure.Hashing.BCrypt.Services;
@@ -12,6 +13,7 @@ using Acme.Center.Platform.Iam.Infrastructure.Tokens.Jwt.Services;
 using Acme.Center.Platform.Iam.Interfaces.Acl;
 using Acme.Center.Platform.Profiles.Application.CommandServices;
 using Acme.Center.Platform.Profiles.Application.Internal.CommandServices;
+using Acme.Center.Platform.Profiles.Application.Internal.QueryServices;
 using Acme.Center.Platform.Profiles.Application.QueryServices;
 using Acme.Center.Platform.Profiles.Domain.Repositories;
 using Acme.Center.Platform.Profiles.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -36,8 +38,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.OpenApi;
 // Added for ProblemDetailsFactory
-
-// Added for base ProblemDetailsFactory
+using Microsoft.AspNetCore.Mvc.Infrastructure; // Added for base ProblemDetailsFactory
+using Acme.Center.Platform.Iam.Resources; // Added for IamMessages
+using Acme.Center.Platform.Profiles.Resources; // Added for ProfilesMessages
+using Acme.Center.Platform.Publishing.Resources;
+using ProblemDetailsFactory = Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails.ProblemDetailsFactory; // Added for PublishingMessages
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +86,9 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddSingleton<IStringLocalizer<ErrorMessages>, StringLocalizer<ErrorMessages>>();
 builder.Services
     .AddSingleton<IStringLocalizer<Commons>, StringLocalizer<Commons>>(); // Corrected from Common to Commons
+builder.Services.AddSingleton<IStringLocalizer<IamMessages>, StringLocalizer<IamMessages>>(); // Added for IamMessages
+builder.Services.AddSingleton<IStringLocalizer<ProfilesMessages>, StringLocalizer<ProfilesMessages>>(); // Added for ProfilesMessages
+builder.Services.AddSingleton<IStringLocalizer<PublishingMessages>, StringLocalizer<PublishingMessages>>(); // Added for PublishingMessages
 
 // Register the custom ProblemDetailsFactory
 builder.Services.AddSingleton<ProblemDetailsFactory>();
@@ -147,7 +155,7 @@ builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("Toke
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
-builder.Services.AddScoped<IUserQueryService, IUserQueryService>();
+builder.Services.AddScoped<IUserQueryService, UserQueryService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();

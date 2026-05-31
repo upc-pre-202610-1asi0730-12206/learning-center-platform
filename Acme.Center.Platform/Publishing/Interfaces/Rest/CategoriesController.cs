@@ -4,20 +4,24 @@ using Acme.Center.Platform.Publishing.Application.QueryServices;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Transform;
+using Acme.Center.Platform.Publishing.Resources; // Corrected using directive
 using Acme.Center.Platform.Resources.Errors;
-using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails;
+using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails; // For ProblemDetailsFactory
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
-// For PublishingError enum
-// For ProblemDetailsFactory
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Acme.Center.Platform.Publishing.Domain.Model; // For PublishingError enum
 
 namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-[SwaggerTag("Available Category Endpoints")]
+[SwaggerTag("Available Category Endpoints.")]
 public class CategoriesController(
     ICategoryCommandService categoryCommandService,
     ICategoryQueryService categoryQueryService,
@@ -45,7 +49,7 @@ public class CategoriesController(
             category,
             _errorLocalizer,
             _problemDetailsFactory,
-            foundCategory => Ok(CategoryResourceFromEntityAssembler.ToResourceFromEntity(foundCategory))
+            (foundCategory) => Ok(CategoryResourceFromEntityAssembler.ToResourceFromEntity(foundCategory))
         );
     }
 
@@ -67,7 +71,7 @@ public class CategoriesController(
             result,
             _errorLocalizer,
             _problemDetailsFactory,
-            createdCategory => CreatedAtAction(nameof(GetCategoryById), new { categoryId = createdCategory.Id },
+            (createdCategory) => CreatedAtAction(nameof(GetCategoryById), new { categoryId = createdCategory.Id },
                 CategoryResourceFromEntityAssembler.ToResourceFromEntity(createdCategory))
         );
     }
