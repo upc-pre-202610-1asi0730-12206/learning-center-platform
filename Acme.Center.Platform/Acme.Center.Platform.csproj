@@ -9,8 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Dependency Injection related packages -->
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8"/>
         <!-- EntityFrameworkCore Database Persistence related packages -->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.8"/>
@@ -32,6 +30,15 @@
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.18.0"/>
         <!-- Mediator pattern related packages -->
         <PackageReference Include="Cortex.Mediator" Version="3.1.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Errors\ErrorMessages.es.resx">
+        <DependentUpon>ErrorMessages.cs</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Iam\IamMessages.es.resx">
+        <DependentUpon>IamMessages.cs</DependentUpon>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
