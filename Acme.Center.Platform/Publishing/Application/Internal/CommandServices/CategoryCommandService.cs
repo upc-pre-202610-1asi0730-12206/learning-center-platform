@@ -1,5 +1,5 @@
 using Acme.Center.Platform.Publishing.Application.CommandServices;
-using Acme.Center.Platform.Publishing.Domain.Model;
+using Acme.Center.Platform.Publishing.Domain.Model; // For PublishingError enum
 using Acme.Center.Platform.Publishing.Domain.Model.Commands;
 using Acme.Center.Platform.Publishing.Domain.Model.Entities;
 using Acme.Center.Platform.Publishing.Domain.Model.Events;
@@ -7,9 +7,12 @@ using Acme.Center.Platform.Publishing.Domain.Repositories;
 using Acme.Center.Platform.Shared.Application.Model;
 using Acme.Center.Platform.Shared.Domain.Repositories;
 using Cortex.Mediator;
+using Microsoft.Extensions.Localization; // For IStringLocalizer
+using Acme.Center.Platform.Resources.Errors; // For ErrorMessages resource
+using Microsoft.EntityFrameworkCore; // For DbUpdateException
 using System.Threading;
 using System.Threading.Tasks;
-using Acme.Center.Platform.Publishing.Domain.Model.Errors;
+using System;
 
 namespace Acme.Center.Platform.Publishing.Application.Internal.CommandServices;
 
@@ -28,9 +31,12 @@ namespace Acme.Center.Platform.Publishing.Application.Internal.CommandServices;
 public class CategoryCommandService(
     ICategoryRepository categoryRepository,
     IUnitOfWork unitOfWork,
-    IMediator domainEventPublisher)
+    IMediator domainEventPublisher,
+    IStringLocalizer<ErrorMessages> localizer) // Inject IStringLocalizer
     : ICategoryCommandService
 {
+    private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
+
     /// <inheritdoc />
     public async Task<Result<Category>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
@@ -46,9 +52,19 @@ public class CategoryCommandService(
             // Return the created category
             return Result<Category>.Success(category);
         }
+        catch (OperationCanceledException)
+        {
+            return Result<Category>.Failure(PublishingError.OperationCancelled, _localizer[nameof(PublishingError.OperationCancelled)]);
+        }
+        catch (DbUpdateException)
+        {
+            // Log the exception details here if an ILogger is injected
+            return Result<Category>.Failure(PublishingError.DatabaseError, _localizer[nameof(PublishingError.DatabaseError)]);
+        }
         catch (Exception)
         {
-            return Result<Category>.Failure(PublishingErrors.CategoryCreationFailed);
+            // Log the exception details here if an ILogger is injected
+            return Result<Category>.Failure(PublishingError.InternalServerError, _localizer[nameof(PublishingError.InternalServerError)]);
         }
     }
 }
