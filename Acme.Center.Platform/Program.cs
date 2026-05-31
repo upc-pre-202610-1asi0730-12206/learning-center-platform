@@ -67,6 +67,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -156,6 +158,14 @@ using (var scope = app.Services.CreateScope())
 
 // Configure the HTTP request pipeline.
 app.UseGlobalExceptionHandler();
+
+var supportedCultures = new[] { "en", "es" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 if (app.Environment.IsDevelopment())
 {
