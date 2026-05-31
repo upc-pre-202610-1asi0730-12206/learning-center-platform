@@ -1,17 +1,17 @@
 using System.Net.Mime;
 using Acme.Center.Platform.Iam.Application.CommandServices;
-using Acme.Center.Platform.Iam.Domain.Model; // For IamError enum
 using Acme.Center.Platform.Iam.Infrastructure.Pipeline.Middleware.Attributes;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Iam.Interfaces.Rest.Transform;
 using Acme.Center.Platform.Resources.Errors;
-using Acme.Center.Platform.Resources.Iam; // Added for IamMessages
-using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails; // For ProblemDetailsFactory
+using Acme.Center.Platform.Resources.Iam;
+using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Threading;
-using System.Threading.Tasks;
+// For IamError enum
+// Added for IamMessages
+// For ProblemDetailsFactory
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 
@@ -58,7 +58,9 @@ public class AuthenticationController(
             result,
             _errorLocalizer,
             _problemDetailsFactory,
-            (userAndToken) => Ok(AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(userAndToken.user, userAndToken.token))
+            userAndToken =>
+                Ok(AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(userAndToken.user,
+                    userAndToken.token))
         );
     }
 

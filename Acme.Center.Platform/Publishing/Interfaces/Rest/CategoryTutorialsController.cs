@@ -3,15 +3,13 @@ using Acme.Center.Platform.Publishing.Application.QueryServices;
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Transform;
-using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails; // For ProblemDetailsFactory
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization; // Needed for the assembler
-using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Acme.Center.Platform.Resources.Errors;
+using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Swashbuckle.AspNetCore.Annotations;
+// For ProblemDetailsFactory
+// Needed for the assembler
 
 namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 
@@ -25,8 +23,8 @@ public class CategoryTutorialsController(
     IStringLocalizer<ErrorMessages> errorLocalizer) // Inject ErrorMessages localizer
     : ControllerBase
 {
-    private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
     private readonly IStringLocalizer<ErrorMessages> _errorLocalizer = errorLocalizer;
+    private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
 
     /// <summary>
     ///     Get all tutorials by category id
@@ -54,7 +52,7 @@ public class CategoryTutorialsController(
             tutorials,
             _errorLocalizer, // Pass localizer
             _problemDetailsFactory, // Pass factory
-            (foundTutorials) => Ok(foundTutorials.Select(TutorialResourceFromEntityAssembler.ToResourceFromEntity))
+            foundTutorials => Ok(foundTutorials.Select(TutorialResourceFromEntityAssembler.ToResourceFromEntity))
         );
     }
 }

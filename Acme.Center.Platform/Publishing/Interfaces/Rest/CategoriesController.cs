@@ -1,19 +1,16 @@
 using System.Net.Mime;
 using Acme.Center.Platform.Publishing.Application.CommandServices;
 using Acme.Center.Platform.Publishing.Application.QueryServices;
-using Acme.Center.Platform.Publishing.Domain.Model; // For PublishingError enum
 using Acme.Center.Platform.Publishing.Domain.Model.Queries;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Resources;
 using Acme.Center.Platform.Publishing.Interfaces.Rest.Transform;
 using Acme.Center.Platform.Resources.Errors;
-using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails; // For ProblemDetailsFactory
+using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+// For PublishingError enum
+// For ProblemDetailsFactory
 
 namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 
@@ -48,7 +45,7 @@ public class CategoriesController(
             category,
             _errorLocalizer,
             _problemDetailsFactory,
-            (foundCategory) => Ok(CategoryResourceFromEntityAssembler.ToResourceFromEntity(foundCategory))
+            foundCategory => Ok(CategoryResourceFromEntityAssembler.ToResourceFromEntity(foundCategory))
         );
     }
 
@@ -70,7 +67,8 @@ public class CategoriesController(
             result,
             _errorLocalizer,
             _problemDetailsFactory,
-            (createdCategory) => CreatedAtAction(nameof(GetCategoryById), new { categoryId = createdCategory.Id }, CategoryResourceFromEntityAssembler.ToResourceFromEntity(createdCategory))
+            createdCategory => CreatedAtAction(nameof(GetCategoryById), new { categoryId = createdCategory.Id },
+                CategoryResourceFromEntityAssembler.ToResourceFromEntity(createdCategory))
         );
     }
 

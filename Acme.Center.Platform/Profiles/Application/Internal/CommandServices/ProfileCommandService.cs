@@ -8,6 +8,7 @@ using Acme.Center.Platform.Shared.Application.Model;
 using Acme.Center.Platform.Shared.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+
 // For ProfilesError enum
 
 namespace Acme.Center.Platform.Profiles.Application.Internal.CommandServices;

@@ -2,7 +2,6 @@ using Acme.Center.Platform.Iam.Application.Acl;
 using Acme.Center.Platform.Iam.Application.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.OutboundServices;
-using Acme.Center.Platform.Iam.Application.Internal.QueryServices;
 using Acme.Center.Platform.Iam.Application.QueryServices;
 using Acme.Center.Platform.Iam.Domain.Repositories;
 using Acme.Center.Platform.Iam.Infrastructure.Hashing.BCrypt.Services;
@@ -13,7 +12,6 @@ using Acme.Center.Platform.Iam.Infrastructure.Tokens.Jwt.Services;
 using Acme.Center.Platform.Iam.Interfaces.Acl;
 using Acme.Center.Platform.Profiles.Application.CommandServices;
 using Acme.Center.Platform.Profiles.Application.Internal.CommandServices;
-using Acme.Center.Platform.Profiles.Application.Internal.QueryServices;
 using Acme.Center.Platform.Profiles.Application.QueryServices;
 using Acme.Center.Platform.Profiles.Domain.Repositories;
 using Acme.Center.Platform.Profiles.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -31,13 +29,15 @@ using Acme.Center.Platform.Shared.Infrastructure.Mediator.Cortex.Configuration;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using Acme.Center.Platform.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using Acme.Center.Platform.Shared.Infrastructure.Pipeline.Middleware.Extensions;
+using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails;
 using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.OpenApi;
-using Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails; // Added for ProblemDetailsFactory
-using Microsoft.AspNetCore.Mvc.Infrastructure; // Added for base ProblemDetailsFactory
+// Added for ProblemDetailsFactory
+
+// Added for base ProblemDetailsFactory
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +45,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
+
+// Add ProblemDetails services
+builder.Services.AddProblemDetails();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -74,12 +77,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-// Explicitly register IStringLocalizer for ErrorMessages and Common
+// Explicitly register IStringLocalizer for ErrorMessages and Commons
 builder.Services.AddSingleton<IStringLocalizer<ErrorMessages>, StringLocalizer<ErrorMessages>>();
-builder.Services.AddSingleton<IStringLocalizer<Commons>, StringLocalizer<Commons>>(); // Corrected from Commons to Common
+builder.Services
+    .AddSingleton<IStringLocalizer<Commons>, StringLocalizer<Commons>>(); // Corrected from Common to Commons
 
 // Register the custom ProblemDetailsFactory
-builder.Services.AddSingleton<Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails.ProblemDetailsFactory>();
+builder.Services.AddSingleton<ProblemDetailsFactory>();
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -133,7 +137,7 @@ builder.Services.AddScoped<ITutorialQueryService, TutorialQueryService>();
 // Profiles Bounded Context Dependency Injection Configuration
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IProfileCommandService, ProfileCommandService>();
-builder.Services.AddScoped<IProfileQueryService, ProfileQueryService>();
+builder.Services.AddScoped<IProfileQueryService, IProfileQueryService>();
 
 // IAM Bounded Context Injection Configuration
 
@@ -143,7 +147,7 @@ builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("Toke
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
-builder.Services.AddScoped<IUserQueryService, UserQueryService>();
+builder.Services.AddScoped<IUserQueryService, IUserQueryService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
