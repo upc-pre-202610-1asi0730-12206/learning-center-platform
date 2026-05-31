@@ -15,8 +15,6 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational.Design" Version="1.1.6"/>
         <!-- MySQL Database Persistence related packages -->
         <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.7"/>
-        <!-- Audit Trails related packages -->
-        <PackageReference Include="EntityFrameworkCore.CreatedUpdatedDate" Version="8.0.0"/>
         <!-- Naming convention conversion related packages -->
         <PackageReference Include="Humanizer" Version="3.0.10"/>
         <!-- OpenAPI documentation related packages -->
