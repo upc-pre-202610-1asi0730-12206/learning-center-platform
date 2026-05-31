@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization; // For IStringLocalizer
+using Acme.Center.Platform.Resources.Errors; // For ErrorMessages resource
+using Acme.Center.Platform.Publishing.Domain.Model; // For PublishingError enum
 
 namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 
@@ -28,8 +31,12 @@ namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 [SwaggerTag("Available Category Endpoints")]
 public class CategoriesController(
     ICategoryCommandService categoryCommandService,
-    ICategoryQueryService categoryQueryService) : ControllerBase
+    ICategoryQueryService categoryQueryService,
+    IStringLocalizer<ErrorMessages> localizer) // Inject IStringLocalizer
+    : ControllerBase
 {
+    private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
+
     /// <summary>
     ///     Get category by id
     /// </summary>
@@ -51,7 +58,14 @@ public class CategoriesController(
     {
         var getCategoryByIdQuery = new GetCategoryByIdQuery(categoryId);
         var category = await categoryQueryService.Handle(getCategoryByIdQuery, cancellationToken);
-        if (category is null) return NotFound();
+        if (category is null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: _localizer[nameof(PublishingError.CategoryNotFound)],
+                detail: _localizer[nameof(PublishingError.CategoryNotFound)]
+            );
+        }
         var resource = CategoryResourceFromEntityAssembler.ToResourceFromEntity(category);
         return Ok(resource);
     }
@@ -77,7 +91,21 @@ public class CategoriesController(
     {
         var createCategoryCommand = CreateCategoryCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result = await categoryCommandService.Handle(createCategoryCommand, cancellationToken);
-        if (result.IsFailure) return BadRequest(result.Error.Message);
+        if (result.IsFailure)
+        {
+            var statusCode = result.Error switch
+            {
+                PublishingError.OperationCancelled => StatusCodes.Status409Conflict,
+                PublishingError.DatabaseError => StatusCodes.Status500InternalServerError,
+                PublishingError.InternalServerError => StatusCodes.Status500InternalServerError,
+                _ => StatusCodes.Status400BadRequest
+            };
+            return Problem(
+                statusCode: statusCode,
+                title: _localizer[$"{result.Error}"],
+                detail: result.Message
+            );
+        }
         var category = result.Value;
         var categoryResource = CategoryResourceFromEntityAssembler.ToResourceFromEntity(category);
         return CreatedAtAction(nameof(GetCategoryById), new { categoryId = category.Id }, categoryResource);
@@ -98,7 +126,8 @@ public class CategoriesController(
     [SwaggerResponse(StatusCodes.Status200OK, "The list of categories", typeof(IEnumerable<CategoryResource>))]
     public async Task<IActionResult> GetAllCategories(CancellationToken cancellationToken)
     {
-        var categories = await categoryQueryService.Handle(new GetAllCategoriesQuery(), cancellationToken);
+        var getAllCategoriesQuery = new GetAllCategoriesQuery();
+        var categories = await categoryQueryService.Handle(getAllCategoriesQuery, cancellationToken);
         var categoryResources = categories.Select(CategoryResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(categoryResources);
     }

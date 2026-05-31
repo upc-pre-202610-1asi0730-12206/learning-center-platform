@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization; // For IStringLocalizer
+using Acme.Center.Platform.Resources.Errors; // For ErrorMessages resource
+using Acme.Center.Platform.Profiles.Domain.Model; // For ProfilesError enum
 
 namespace Acme.Center.Platform.Profiles.Interfaces.Rest;
 
@@ -19,9 +22,12 @@ namespace Acme.Center.Platform.Profiles.Interfaces.Rest;
 [SwaggerTag("Available Profile Endpoints.")]
 public class ProfilesController(
     IProfileCommandService profileCommandService,
-    IProfileQueryService profileQueryService)
+    IProfileQueryService profileQueryService,
+    IStringLocalizer<ErrorMessages> localizer) // Inject IStringLocalizer
     : ControllerBase
 {
+    private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
+
     [HttpGet("{profileId:int}")]
     [SwaggerOperation("Get Profile by Id", "Get a profile by its unique identifier.", OperationId = "GetProfileById")]
     [SwaggerResponse(200, "The profile was found and returned.", typeof(ProfileResource))]
@@ -30,7 +36,14 @@ public class ProfilesController(
     {
         var getProfileByIdQuery = new GetProfileByIdQuery(profileId);
         var profile = await profileQueryService.Handle(getProfileByIdQuery, cancellationToken);
-        if (profile is null) return NotFound();
+        if (profile is null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: _localizer[nameof(ProfilesError.ProfileNotFound)],
+                detail: _localizer[nameof(ProfilesError.ProfileNotFound)]
+            );
+        }
         var profileResource = ProfileResourceFromEntityAssembler.ToResourceFromEntity(profile);
         return Ok(profileResource);
     }
@@ -43,7 +56,22 @@ public class ProfilesController(
     {
         var createProfileCommand = CreateProfileCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result = await profileCommandService.Handle(createProfileCommand, cancellationToken);
-        if (result.IsFailure) return BadRequest(result.Error.Message);
+        if (result.IsFailure)
+        {
+            var statusCode = result.Error switch
+            {
+                ProfilesError.EmailAlreadyRegistered => StatusCodes.Status409Conflict,
+                ProfilesError.OperationCancelled => StatusCodes.Status409Conflict,
+                ProfilesError.DatabaseError => StatusCodes.Status500InternalServerError,
+                ProfilesError.InternalServerError => StatusCodes.Status500InternalServerError,
+                _ => StatusCodes.Status400BadRequest
+            };
+            return Problem(
+                statusCode: statusCode,
+                title: _localizer[$"{result.Error}"],
+                detail: result.Message
+            );
+        }
         var profile = result.Value;
         var profileResource = ProfileResourceFromEntityAssembler.ToResourceFromEntity(profile);
         return CreatedAtAction(nameof(GetProfileById), new { profileId = profile.Id }, profileResource);

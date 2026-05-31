@@ -10,6 +10,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Acme.Center.Platform.Iam.Application.QueryServices;
+using Microsoft.Extensions.Localization; // For IStringLocalizer
+using Acme.Center.Platform.Resources.Errors; // For ErrorMessages resource
+using Acme.Center.Platform.Iam.Domain.Model; // For IamError enum
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 
@@ -26,8 +29,13 @@ namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [SwaggerTag("Available User endpoints")]
-public class UsersController(IUserQueryService userQueryService) : ControllerBase
+public class UsersController(
+    IUserQueryService userQueryService,
+    IStringLocalizer<ErrorMessages> localizer) // Inject IStringLocalizer
+    : ControllerBase
 {
+    private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
+
     /**
      * <summary>
      *     Get user by id endpoint. It allows to get a user by id
@@ -42,10 +50,19 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
         Description = "Get a user by its id",
         OperationId = "GetUserById")]
     [SwaggerResponse(StatusCodes.Status200OK, "The user was found", typeof(UserResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The user was not found")]
     public async Task<IActionResult> GetUserById(int id, CancellationToken cancellationToken)
     {
         var getUserByIdQuery = new GetUserByIdQuery(id);
         var user = await userQueryService.Handle(getUserByIdQuery, cancellationToken);
+        if (user is null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: _localizer[nameof(IamError.UserNotFound)],
+                detail: _localizer[nameof(IamError.UserNotFound)]
+            );
+        }
         var userResource = UserResourceFromEntityAssembler.ToResourceFromEntity(user!);
         return Ok(userResource);
     }
@@ -66,6 +83,7 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
     {
         var getAllUsersQuery = new GetAllUsersQuery();
         var users = await userQueryService.Handle(getAllUsersQuery, cancellationToken);
+        // Assuming that an empty list is not an error, but a valid result
         var userResources = users.Select(UserResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(userResources);
     }

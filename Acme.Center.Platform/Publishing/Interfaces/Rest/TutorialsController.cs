@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization; // For IStringLocalizer
+using Acme.Center.Platform.Resources.Errors; // For ErrorMessages resource
+using Acme.Center.Platform.Publishing.Domain.Model; // For PublishingError enum
 
 namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 
@@ -28,8 +31,12 @@ namespace Acme.Center.Platform.Publishing.Interfaces.Rest;
 [SwaggerTag("Available Tutorial endpoints")]
 public class TutorialsController(
     ITutorialQueryService tutorialQueryService,
-    ITutorialCommandService tutorialCommandService) : ControllerBase
+    ITutorialCommandService tutorialCommandService,
+    IStringLocalizer<ErrorMessages> localizer) // Inject IStringLocalizer
+    : ControllerBase
 {
+    private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
+
     /// <summary>
     ///     Get a tutorial by its id
     /// </summary>
@@ -51,7 +58,14 @@ public class TutorialsController(
     public async Task<IActionResult> GetTutorialById([FromRoute] int tutorialId, CancellationToken cancellationToken)
     {
         var tutorial = await tutorialQueryService.Handle(new GetTutorialByIdQuery(tutorialId), cancellationToken);
-        if (tutorial is null) return NotFound();
+        if (tutorial is null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: _localizer[nameof(PublishingError.TutorialNotFound)],
+                detail: _localizer[nameof(PublishingError.TutorialNotFound)]
+            );
+        }
         var tutorialResource = TutorialResourceFromEntityAssembler.ToResourceFromEntity(tutorial);
         return Ok(tutorialResource);
     }
@@ -78,7 +92,23 @@ public class TutorialsController(
     {
         var createTutorialCommand = CreateTutorialCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result = await tutorialCommandService.Handle(createTutorialCommand, cancellationToken);
-        if (result.IsFailure) return BadRequest(result.Error.Message);
+        if (result.IsFailure)
+        {
+            var statusCode = result.Error switch
+            {
+                PublishingError.CategoryNotFound => StatusCodes.Status400BadRequest,
+                PublishingError.DuplicateTutorialTitle => StatusCodes.Status409Conflict,
+                PublishingError.OperationCancelled => StatusCodes.Status409Conflict,
+                PublishingError.DatabaseError => StatusCodes.Status500InternalServerError,
+                PublishingError.InternalServerError => StatusCodes.Status500InternalServerError,
+                _ => StatusCodes.Status400BadRequest
+            };
+            return Problem(
+                statusCode: statusCode,
+                title: _localizer[$"{result.Error}"],
+                detail: result.Message
+            );
+        }
         var tutorial = result.Value;
         var tutorialResource = TutorialResourceFromEntityAssembler.ToResourceFromEntity(tutorial);
         return CreatedAtAction(nameof(GetTutorialById), new { tutorialId = tutorial.Id }, tutorialResource);
@@ -113,7 +143,22 @@ public class TutorialsController(
         var addVideoAssetToTutorialCommand =
             AddVideoAssetToTutorialCommandFromResourceAssembler.ToCommandFromResource(resource, tutorialId);
         var result = await tutorialCommandService.Handle(addVideoAssetToTutorialCommand, cancellationToken);
-        if (result.IsFailure) return BadRequest(result.Error.Message);
+        if (result.IsFailure)
+        {
+            var statusCode = result.Error switch
+            {
+                PublishingError.TutorialNotFound => StatusCodes.Status404NotFound,
+                PublishingError.OperationCancelled => StatusCodes.Status409Conflict,
+                PublishingError.DatabaseError => StatusCodes.Status500InternalServerError,
+                PublishingError.InternalServerError => StatusCodes.Status500InternalServerError,
+                _ => StatusCodes.Status400BadRequest
+            };
+            return Problem(
+                statusCode: statusCode,
+                title: _localizer[$"{result.Error}"],
+                detail: result.Message
+            );
+        }
         var tutorial = result.Value;
         var tutorialResource = TutorialResourceFromEntityAssembler.ToResourceFromEntity(tutorial);
         return CreatedAtAction(nameof(GetTutorialById), new { tutorialId = tutorial.Id }, tutorialResource);

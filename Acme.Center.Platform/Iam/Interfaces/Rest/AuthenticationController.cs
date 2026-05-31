@@ -7,6 +7,9 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.Threading;
 using System.Threading.Tasks;
 using Acme.Center.Platform.Iam.Application.CommandServices;
+using Acme.Center.Platform.Iam.Domain.Model; // For IamError enum
+using Microsoft.Extensions.Localization; // For IStringLocalizer
+using Acme.Center.Platform.Resources.Errors; // For ErrorMessages resource
 
 namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 
@@ -15,8 +18,13 @@ namespace Acme.Center.Platform.Iam.Interfaces.Rest;
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [SwaggerTag("Available Authentication endpoints")]
-public class AuthenticationController(IUserCommandService userCommandService) : ControllerBase
+public class AuthenticationController(
+    IUserCommandService userCommandService,
+    IStringLocalizer<ErrorMessages> localizer) // Inject IStringLocalizer
+    : ControllerBase
 {
+    private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
+
     /**
      * <summary>
      *     Sign in endpoint. It allows authenticating a user
@@ -37,7 +45,19 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     {
         var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(signInResource);
         var result = await userCommandService.Handle(signInCommand, cancellationToken);
-        if (result.IsFailure) return BadRequest(result.Error.Message);
+        if (result.IsFailure)
+        {
+            var statusCode = result.Error switch
+            {
+                IamError.InvalidCredentials => StatusCodes.Status400BadRequest,
+                _ => StatusCodes.Status400BadRequest // Default to BadRequest for other IamError failures
+            };
+            return Problem(
+                statusCode: statusCode,
+                title: _localizer[$"{result.Error}"], // Use enum name as key for title
+                detail: result.Message // Use the localized message from the service
+            );
+        }
         var authenticatedUser = result.Value;
         var resource =
             AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(authenticatedUser.user,
@@ -65,7 +85,22 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     {
         var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(signUpResource);
         var result = await userCommandService.Handle(signUpCommand, cancellationToken);
-        if (result.IsFailure) return BadRequest(result.Error.Message);
-        return Ok(new { message = "User created successfully" });
+        if (result.IsFailure)
+        {
+            var statusCode = result.Error switch
+            {
+                IamError.UsernameAlreadyTaken => StatusCodes.Status409Conflict,
+                IamError.OperationCancelled => StatusCodes.Status409Conflict, // Or 400 depending on desired behavior
+                IamError.DatabaseError => StatusCodes.Status500InternalServerError,
+                IamError.InternalServerError => StatusCodes.Status500InternalServerError,
+                _ => StatusCodes.Status400BadRequest // Default for other IamError failures
+            };
+            return Problem(
+                statusCode: statusCode,
+                title: _localizer[$"{result.Error}"], // Use enum name as key for title
+                detail: result.Message // Use the localized message from the service
+            );
+        }
+        return Ok(new { message = _localizer["UserCreatedSuccessfully"] }); // Assuming a generic success message
     }
 }
