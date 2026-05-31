@@ -2,6 +2,7 @@ using Acme.Center.Platform.Iam.Application.Acl;
 using Acme.Center.Platform.Iam.Application.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.CommandServices;
 using Acme.Center.Platform.Iam.Application.Internal.OutboundServices;
+using Acme.Center.Platform.Iam.Application.Internal.QueryServices;
 using Acme.Center.Platform.Iam.Application.QueryServices;
 using Acme.Center.Platform.Iam.Domain.Repositories;
 using Acme.Center.Platform.Iam.Infrastructure.Hashing.BCrypt.Services;
@@ -141,7 +142,7 @@ builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("Toke
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
-builder.Services.AddScoped<IUserQueryService, IUserQueryService>();
+builder.Services.AddScoped<IUserQueryService, UserQueryService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
