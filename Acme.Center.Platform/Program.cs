@@ -85,7 +85,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 // Explicitly register IStringLocalizer for ErrorMessages and Commons
 builder.Services.AddSingleton<IStringLocalizer<ErrorMessages>, StringLocalizer<ErrorMessages>>();
 builder.Services
-    .AddSingleton<IStringLocalizer<Commons>, StringLocalizer<Commons>>(); // Corrected from Common to Commons
+    .AddSingleton<IStringLocalizer<CommonMessages>, StringLocalizer<CommonMessages>>(); // Corrected from Common to Commons
 builder.Services.AddSingleton<IStringLocalizer<IamMessages>, StringLocalizer<IamMessages>>(); // Added for IamMessages
 builder.Services.AddSingleton<IStringLocalizer<ProfilesMessages>, StringLocalizer<ProfilesMessages>>(); // Added for ProfilesMessages
 builder.Services.AddSingleton<IStringLocalizer<PublishingMessages>, StringLocalizer<PublishingMessages>>(); // Added for PublishingMessages

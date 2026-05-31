@@ -11,12 +11,12 @@ namespace Acme.Center.Platform.Shared.Interfaces.Rest.ProblemDetails
     public class ProblemDetailsFactory
     {
         private readonly IStringLocalizer<ErrorMessages> _errorLocalizer;
-        private readonly IStringLocalizer<Commons> _commonLocalizer; // Corrected to Commons
+        private readonly IStringLocalizer<CommonMessages> _commonLocalizer; // Corrected to Commons
         private readonly Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory _aspNetCoreProblemDetailsFactory; // Corrected type and name
 
         public ProblemDetailsFactory(
             IStringLocalizer<ErrorMessages> errorLocalizer,
-            IStringLocalizer<Commons> commonLocalizer, // Corrected to Commons
+            IStringLocalizer<CommonMessages> commonLocalizer, // Corrected to Commons
             Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory aspNetCoreProblemDetailsFactory) // Corrected injected type
         {
             _errorLocalizer = errorLocalizer;

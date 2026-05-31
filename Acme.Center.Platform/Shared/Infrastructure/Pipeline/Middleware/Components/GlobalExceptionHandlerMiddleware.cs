@@ -20,10 +20,10 @@ public class GlobalExceptionHandlerMiddleware(
     RequestDelegate next,
     ILogger<GlobalExceptionHandlerMiddleware> logger,
     IStringLocalizer<ErrorMessages> errorLocalizer, // Inject IStringLocalizer for error messages
-    IStringLocalizer<Commons> // Corrected from Commons to Common
+    IStringLocalizer<CommonMessages> // Corrected to Commons
         commonLocalizer) // Inject IStringLocalizer for common messages like "Internal Server Error"
 {
-    private readonly IStringLocalizer<Commons> _commonLocalizer = commonLocalizer; // Corrected from Commons to Common
+    private readonly IStringLocalizer<CommonMessages> _commonLocalizer = commonLocalizer; // Corrected to Commons
     private readonly IStringLocalizer<ErrorMessages> _errorLocalizer = errorLocalizer;
 
     /**
