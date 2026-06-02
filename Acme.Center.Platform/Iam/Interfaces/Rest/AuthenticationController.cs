@@ -27,10 +27,6 @@ public class AuthenticationController(
     ProblemDetailsFactory problemDetailsFactory) // Inject ProblemDetailsFactory
     : ControllerBase
 {
-    private readonly IStringLocalizer<ErrorMessages> _errorLocalizer = errorLocalizer;
-    private readonly IStringLocalizer<IamMessages> _iamLocalizer = iamLocalizer;
-    private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
-
     /**
      * <summary>
      *     Sign in endpoint. It allows authenticating a user
@@ -56,8 +52,8 @@ public class AuthenticationController(
         return IamActionResultAssembler.ToActionResultFromSignInResult(
             this,
             result,
-            _errorLocalizer,
-            _problemDetailsFactory,
+            errorLocalizer,
+            problemDetailsFactory,
             userAndToken =>
                 Ok(AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(userAndToken.user,
                     userAndToken.token))
@@ -89,9 +85,9 @@ public class AuthenticationController(
         return IamActionResultAssembler.ToActionResultFromSignUpResult(
             this,
             result,
-            _errorLocalizer,
-            _problemDetailsFactory,
-            () => Ok(new { message = _iamLocalizer["UserCreatedSuccessfully"] })
+            errorLocalizer,
+            problemDetailsFactory,
+            () => Ok(new { message = iamLocalizer["UserCreatedSuccessfully"] })
         );
     }
 }
