@@ -28,7 +28,7 @@ public interface IUserCommandService
         * <summary>
         *     Handle sign up command
         * </summary>
-        * <param name="command">The sign up command</param>
+        * <param name="command">The sign-up command</param>
         * <param name="cancellationToken">The cancellation token</param>
         * <returns>A confirmation message on successful creation.</returns>
         */
